@@ -24,11 +24,11 @@ Used to fetch data from a table.
 
 ### Syntax
 
-```sql
+'''sql
 SELECT column1, column2
-FROM table_name;
+FROM table_name;'''
 
-##2. WHERE
+## 2. WHERE
 
 Used to filter rows based on conditions.
 
@@ -42,25 +42,26 @@ Operators
 * != (not equal)
 
 ### Example
-SELECT * FROM employees WHERE salary > 50000;
-SELECT * FROM employees WHERE department = 'IT';
+''' SELECT * FROM employees WHERE salary > 50000;
+SELECT * FROM employees WHERE department = 'IT'; '''
 
 
 ## 3. ORDER BY
 
 Used to sort results.
 ### Syntax
+'''
 SELECT * FROM table_name
 ORDER BY column_name [ASC | DESC];
-
+'''
 
 ## 4. LIMIT
 
 Used to restrict number of rows returned.
 
 ### Syntax
-SELECT * FROM table_name
-LIMIT n;
+''' SELECT * FROM table_name
+LIMIT n;'''
 
 ## 5. AND / OR
 
