@@ -147,3 +147,28 @@ Move to:
 - GROUP BY  
 - Aggregations (COUNT, SUM, AVG)  
 - Real-world query patterns  
+
+
+# SQL Aggregations - Day 2
+
+## Topics Covered
+
+- GROUP BY
+- COUNT()
+- SUM()
+- AVG()
+- MIN()
+- MAX()
+
+---
+
+## GROUP BY
+
+Used to group rows based on a column.
+
+### Example
+
+```sql
+SELECT department, COUNT(*)
+FROM employees
+GROUP BY department;```
