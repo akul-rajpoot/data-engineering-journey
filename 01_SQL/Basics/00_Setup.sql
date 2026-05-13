@@ -36,4 +36,6 @@ INSERT INTO departments VALUES
 ('HR', 'Anita');
 
 
+INSERT INTO employees VALUES
+(9, 'Amit', 32, 70000, 'IT', 'Mumbai');
 
