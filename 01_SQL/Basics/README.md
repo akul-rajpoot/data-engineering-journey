@@ -159,6 +159,8 @@ Move to:
 - AVG()
 - MIN()
 - MAX()
+- IFNULL()
+- COALESCE()
 
 ---
 
@@ -192,6 +194,17 @@ SELECT AVG(salary) FROM employees;
 ```sql
 SELECT MAX(salary), MIN(salary) FROM employees;
 ```
+
+## IFNULL() : Return the specified value IF the expression is NULL, otherwise return the expression
+```sql 
+SELECT IFNULL(NULL, value);
+```
+
+## COALESCE() : Return the first non-null value in a list
+```SQL
+SELECT COALESCE(NULL, NULL, NULL, 'value', NULL, 'another value');
+```
+
 ## 🧠 Key Takeaways
 - GROUP BY is used for grouping data
 - Aggregations summarize data

@@ -14,9 +14,11 @@ from employees group by department;
 select sum(salary) as sal , department from employees
 group by department;
 
+
 -- Q4: Average salary per department
 select avg(salary) sal , department from employees
 group by department;
+
 
 -- Q5: Highest salary in each department
 select max(salary) as salary, department from employees
@@ -33,6 +35,30 @@ group by city;
 -- Q8: Count employees by city
 select city,count(*) as cnt from employees
 group by city;
+
+-- Q9: Using ROUND()
+select round(avg(salary),2) as rounded_sal,department
+from employees
+group by department;
+
+-- Q10 using IFNULL
+select Name,IFNULL(salary,0)
+from employees;
+
+-- Q11 COALESCE 
+SELECT name, COALESCE(salary, 0) AS salary
+FROM employees;
+
+SELECT name, COALESCE(city, department, 'Unknown') AS location
+FROM employees;
+
+SELECT 
+    name,
+    ROUND(COALESCE(salary, 0), 0) AS final_salary
+FROM employees;
+
+
+
 
 
 
