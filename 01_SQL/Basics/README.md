@@ -1,86 +1,149 @@
 # SQL Basics - Day 1
 
-## Topics Covered
+## 📌 Topics Covered
 
-- SELECT
-- WHERE
-- ORDER BY
-- LIMIT
-- AND / OR
+- SELECT  
+- WHERE  
+- ORDER BY  
+- LIMIT  
+- AND / OR  
 
-## Goal
+---
+
+## 🎯 Goal
 
 Understand how to:
-- fetch data
-- filter rows
-- sort results
-- limit output
+- Fetch data from tables  
+- Filter rows using conditions  
+- Sort results  
+- Limit output  
+- Combine multiple conditions  
 
-# SQL Basics - Day 1
+---
 
-## 1. SELECT
+## 1️⃣ SELECT
 
 Used to fetch data from a table.
 
 ### Syntax
 
-'''sql
+```sql
 SELECT column1, column2
-FROM table_name;'''
+FROM table_name;
+```
 
-## 2. WHERE
+### Examples
+
+```sql
+SELECT * FROM employees;
+
+SELECT name, salary FROM employees;
+```
+
+---
+
+## 2️⃣ WHERE
 
 Used to filter rows based on conditions.
 
-Operators
+### Operators
 
-* = (equal)
-* (greater than)
-* < (less than)
-* = (greater than or equal)
-* <= (less than or equal)
-* != (not equal)
+- = (equal)  
+- > (greater than)  
+- < (less than)  
+- >= (greater than or equal)  
+- <= (less than or equal)  
+- != (not equal)  
 
-### Example
-''' SELECT * FROM employees WHERE salary > 50000;
-SELECT * FROM employees WHERE department = 'IT'; '''
+### Examples
 
+```sql
+SELECT * FROM employees WHERE salary > 50000;
 
-## 3. ORDER BY
+SELECT * FROM employees WHERE department = 'IT';
+```
+
+---
+
+## 3️⃣ ORDER BY
 
 Used to sort results.
-### Syntax
-'''
-SELECT * FROM table_name
-ORDER BY column_name [ASC | DESC];
-'''
 
-## 4. LIMIT
+### Syntax
+
+```sql
+SELECT * FROM table_name
+ORDER BY column_name ASC;
+```
+
+### Examples
+
+```sql
+SELECT * FROM employees ORDER BY salary;
+
+SELECT * FROM employees ORDER BY salary DESC;
+```
+
+---
+
+## 4️⃣ LIMIT
 
 Used to restrict number of rows returned.
 
 ### Syntax
-''' SELECT * FROM table_name
-LIMIT n;'''
 
-## 5. AND / OR
+```sql
+SELECT * FROM table_name
+LIMIT n;
+```
+
+### Example
+
+```sql
+SELECT * FROM employees LIMIT 5;
+```
+
+---
+
+## 5️⃣ AND / OR
 
 Used to combine multiple conditions.
-### Example
+
+### Examples
+
+```sql
 SELECT * FROM employees 
 WHERE salary > 50000 AND department = 'IT';
 
 SELECT * FROM employees 
 WHERE department = 'IT' OR department = 'HR';
+```
 
-##Key Takeaways
+---
 
-* SELECT → fetch data
-* WHERE → filter rows
-* ORDER BY → sort results
-* LIMIT → restrict output
-* AND/OR → combine conditions
+## 🧠 Key Takeaways
 
-Practice File
+- SELECT → Fetch data  
+- WHERE → Filter rows  
+- ORDER BY → Sort results  
+- LIMIT → Restrict output  
+- AND / OR → Combine conditions  
+
+---
+
+## 📂 Practice File
+
 All queries are available in:
+
+```text
 01_select_where_order_limit.sql
+```
+
+---
+
+## 🚀 Next Step
+
+Move to:
+- GROUP BY  
+- Aggregations (COUNT, SUM, AVG)  
+- Real-world query patterns  
