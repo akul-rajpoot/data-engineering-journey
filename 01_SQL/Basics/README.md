@@ -28,7 +28,7 @@ Used to fetch data from a table.
 SELECT column1, column2
 FROM table_name;
 
-2. WHERE
+##2. WHERE
 
 Used to filter rows based on conditions.
 
@@ -41,32 +41,38 @@ Operators
 * <= (less than or equal)
 * != (not equal)
 
-3. ORDER BY
+### Example
+SELECT * FROM employees WHERE salary > 50000;
+SELECT * FROM employees WHERE department = 'IT';
+
+
+## 3. ORDER BY
 
 Used to sort results.
-Syntax
+### Syntax
 SELECT * FROM table_name
 ORDER BY column_name [ASC | DESC];
 
 
-4. LIMIT
+## 4. LIMIT
 
 Used to restrict number of rows returned.
 
-Syntax
+### Syntax
 SELECT * FROM table_name
 LIMIT n;
 
-5. AND / OR
+## 5. AND / OR
 
 Used to combine multiple conditions.
+### Example
 SELECT * FROM employees 
 WHERE salary > 50000 AND department = 'IT';
 
 SELECT * FROM employees 
 WHERE department = 'IT' OR department = 'HR';
 
-Key Takeaways
+##Key Takeaways
 
 * SELECT → fetch data
 * WHERE → filter rows
