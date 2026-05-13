@@ -27,8 +27,8 @@ INSERT INTO employees VALUES
 (11, 'Simran', 27, 55555.75, 'HR', NULL),
 (12, 'Arjun', 29, NULL, 'Finance', 'Mumbai'),
 (13, 'Kavya', 26, 48234.50, 'IT', NULL),
-(14, 'Manish', 33, 91000.25, 'Finance', 'Delhi')
-;
+(14, 'Manish', 33, 91000.25, 'Finance', 'Delhi'),
+(15, 'Tarun', 54, 91000.25, 'Admin', 'Delhi');
 
 #creating second table 
 CREATE TABLE departments (

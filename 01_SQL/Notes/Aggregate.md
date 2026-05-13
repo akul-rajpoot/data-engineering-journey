@@ -109,6 +109,55 @@ Finds highest and lowest values.
 | WHERE | filters rows |
 | GROUP BY | groups rows |
 
+## 5. HAVING Clause
+
+HAVING is used to filter grouped data after aggregation.
+
+---
+
+## Concepts
+
+- Works on grouped results  
+
+- Used with GROUP BY  
+
+- Filters aggregated values  
+
+---
+
+## Key Points
+
+- HAVING is applied AFTER GROUP BY  
+
+- Used when filtering on aggregation functions (COUNT, SUM, AVG, etc.)  
+
+- Cannot replace WHERE  
+
+- Works on group-level data  
+
+---
+
+## WHERE vs HAVING
+
+| Clause | Works On | When Used |
+
+|--------|---------|----------|
+
+| WHERE | individual rows | before grouping |
+
+| HAVING | grouped data | after grouping |
+
+---
+
+## Key Difference
+
+- WHERE filters raw data  
+
+- HAVING filters aggregated data  
+
+---
+
+
 ### Key Idea
 
 - WHERE filters data BEFORE grouping  
@@ -124,11 +173,12 @@ Finds highest and lowest values.
 
 ---
 
-## 6. SQL Execution Order (With GROUP BY)
+## Execution Order
 
 ```text
-FROM → WHERE → GROUP BY → SELECT → ORDER BY → LIMIT
+FROM → WHERE → GROUP BY → HAVING → SELECT → ORDER BY → LIMIT
 ```
+
 # SUMMARY
 - GROUP BY groups data
 - Aggregations summarize data

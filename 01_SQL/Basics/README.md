@@ -185,27 +185,44 @@ SELECT COUNT(*) FROM employees;
 ```sql
 SELECT SUM(salary) FROM employees;
 ```
-## AVG() : Calculates average.
+### AVG() : Calculates average.
 ```sql
 SELECT AVG(salary) FROM employees;
 ```
 
-## MAX() / MIN() : Find highest / lowest value.
+### MAX() / MIN() : Find highest / lowest value.
 ```sql
 SELECT MAX(salary), MIN(salary) FROM employees;
 ```
 
-## IFNULL() : Return the specified value IF the expression is NULL, otherwise return the expression
+### IFNULL() : Return the specified value IF the expression is NULL, otherwise return the expression
 ```sql 
 SELECT IFNULL(NULL, value);
 ```
 
-## COALESCE() : Return the first non-null value in a list
+### COALESCE() : Return the first non-null value in a list
 ```SQL
 SELECT COALESCE(NULL, NULL, NULL, 'value', NULL, 'another value');
 ```
+
+### Having() to filter the results of a GROUP BY
+```text
+WHERE → filters rows
+GROUP BY → groups data
+```
+```sql
+SELECT column1, aggregate_function(column2), column3, ...
+FROM table_name
+WHERE condition
+GROUP BY column1, column3
+HAVING condition -- The condition on grouped data
+ORDER BY column_name;
+```
+
 
 ## 🧠 Key Takeaways
 - GROUP BY is used for grouping data
 - Aggregations summarize data
 - Used heavily in analytics & reporting
+- WHERE → before grouping  
+- HAVING → after grouping

@@ -1,6 +1,7 @@
 -- =========================
 --  GROUP BY + AGGREGATIONS
 -- =========================
+use de_practice;
 
 select * from employees;
 -- Q1: Count total employees
@@ -56,6 +57,26 @@ SELECT
     name,
     ROUND(COALESCE(salary, 0), 0) AS final_salary
 FROM employees;
+
+-- Q12 Find departments having less than 2 employees.
+select department from employees
+group by department
+having count(*)<2;
+
+-- Q13 Find cities where more than 3 employee exists.
+select city from employees
+group by city
+having count(*)>3;
+
+-- Q14 Find departments where average salary is greater than 60000
+select department
+from employees
+group by department
+having avg(salary)>60000;
+
+
+
+
 
 
 
