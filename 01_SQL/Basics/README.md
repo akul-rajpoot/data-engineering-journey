@@ -149,7 +149,7 @@ Move to:
 - Real-world query patterns  
 
 
-# SQL Aggregations - Day 2
+# SQL Aggregations 
 
 ## Topics Covered
 
@@ -171,4 +171,28 @@ Used to group rows based on a column.
 ```sql
 SELECT department, COUNT(*)
 FROM employees
-GROUP BY department;```
+GROUP BY department;
+```
+
+## Aggregation Functions
+### COUNT() : Counts number of rows.
+```sql
+SELECT COUNT(*) FROM employees;
+```
+### SUM() : Calculates total.
+```sql
+SELECT SUM(salary) FROM employees;
+```
+## AVG() : Calculates average.
+```sql
+SELECT AVG(salary) FROM employees;
+```
+
+## MAX() / MIN() : Find highest / lowest value.
+```sql
+SELECT MAX(salary), MIN(salary) FROM employees;
+```
+## 🧠 Key Takeaways
+- GROUP BY is used for grouping data
+- Aggregations summarize data
+- Used heavily in analytics & reporting
