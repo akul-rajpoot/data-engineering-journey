@@ -28,7 +28,9 @@ INSERT INTO employees VALUES
 (12, 'Arjun', 29, NULL, 'Finance', 'Mumbai'),
 (13, 'Kavya', 26, 48234.50, 'IT', NULL),
 (14, 'Manish', 33, 91000.25, 'Finance', 'Delhi'),
-(15, 'Tarun', 54, 91000.25, 'Admin', 'Delhi');
+(15, 'Tarun', 54, 91000.25, 'Admin', 'Delhi'),
+(16, 'Juli', 54, 91000.25, 'Security', 'Delhi'),
+(17, 'Tarun', 54, 91000.25, 'Security', 'Delhi');
 
 #creating second table 
 CREATE TABLE departments (
@@ -40,6 +42,23 @@ CREATE TABLE departments (
 INSERT INTO departments VALUES
 ('IT', 'Suresh'),
 ('Finance', 'Ramesh'),
-('HR', 'Anita');
+('HR', 'Anita'),
+('Security', 'Anil');
+
+#creating third table
+CREATE TABLE projects (
+    project_id INT PRIMARY KEY,
+    project_name VARCHAR(50),
+    department VARCHAR(50)
+);
+INSERT INTO projects VALUES
+(1, 'Fraud Detection', 'Finance'),
+(2, 'HR Analytics', 'HR'),
+(3, 'Payment System', 'IT'),
+(4, 'AI Platform', 'IT'),
+(5, 'Recruitment Tool', 'HR'),
+(6, 'Admin Dashboard', 'Admin'),
+(7, 'Security Upgrade', 'Cyber'),
+(8, '', 'Security');
 
 
