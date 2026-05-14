@@ -1,13 +1,3 @@
----
-
-# ✅ 2. Notes File (Theory Only)
-
-📁 `01_SQL/Notes/joins.md`
-
-👉 Copy-paste this:
-
-```md
-# SQL Theory Notes: JOINS
 
 ---
 
