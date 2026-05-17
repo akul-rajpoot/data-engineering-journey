@@ -65,7 +65,38 @@ FROM employees;
 01_Ranking.sql
 ```
 
+## LEAD & LAG
 
+### LAG() : function is used to get value from the row that precedes the current row
+
+```sql
+LAG(expr, N, default) 
+          OVER (Window_specification | Window_name)
+```
+### LEAD() : function is used to get value from a row that succeeds the current row.
+'''sql
+LEAD(expr, N, default) 
+          OVER (Window_specification | Window_name)
+'''
+
+## Use Cases
+* Compare rows
+* Detect changes
+* Track trends
+* Time-series analysis
+
+## 🧠 Real-World Use :LEAD/LAG is used in:
+
+* stock price changes
+* user activity tracking
+* ETL pipelines
+* audit logs
+
+
+## Practice File
+```text
+01_lead_lag.sql
+```
 
 
 
