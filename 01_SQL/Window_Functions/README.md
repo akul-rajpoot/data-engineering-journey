@@ -7,6 +7,7 @@
 - DENSE_RANK()
 - PARTITION BY
 - ORDER BY
+- LAG & LEAD
 
 ---
 
