@@ -31,7 +31,6 @@ where s.salary<next_sal;
 
 
 #Q5:Find salary difference between current and previous employee.
-
 select name,department,salary,
 salary-lag(salary) over (partition by department order by emp_id desc) as diff
 from employees;
