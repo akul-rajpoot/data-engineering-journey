@@ -115,3 +115,84 @@ INSERT INTO title (worker_ref_id, worker_title, affected_from) VALUES
 (7, 'Executive', '2023-01-20'),
 (6, 'Lead', '2023-06-11'),
 (3, 'Lead', '2023-06-11');
+
+
+#Q4: Find all posts which were reacted to with a heart
+#Find all posts which were reacted to with a heart. For such posts output all columns from facebook_posts table.
+
+
+CREATE TABLE facebook_posts (
+    post_id BIGINT PRIMARY KEY,
+    poster BIGINT,
+    post_date DATE,
+    post_text TEXT,
+    post_keywords TEXT
+);
+
+CREATE TABLE facebook_reactions (
+    post_id BIGINT,
+    poster BIGINT,
+    friend BIGINT,
+    reaction TEXT,
+    date_day INT
+);
+
+INSERT INTO facebook_posts VALUES
+(1, 101, '2024-01-01', 'Happy New Year!', 'celebration'),
+(2, 102, '2024-01-02', 'Workout done 💪', 'fitness'),
+(3, 101, '2024-01-03', 'SQL is fun', 'tech'),
+(4, 103, '2024-01-04', 'Travel diaries', 'travel'),
+(5, 104, '2024-01-05', 'Healthy eating', 'fitness');
+
+INSERT INTO facebook_reactions VALUES
+(1, 101, 201, 'like', 1),
+(1, 101, 202, 'love', 1),
+(2, 102, 201, 'heart', 2),
+(2, 102, 203, 'like', 2),
+(3, 101, 202, 'heart', 3),
+(3, 101, 204, 'like', 3),
+(4, 103, 201, 'heart', 4),
+(4, 103, 202, 'like', 4),
+(5, 104, 203, 'heart', 5),
+(5, 104, 204, 'like', 5);
+
+#Q5: Find all the users who were active for 3 consecutive days or more.
+CREATE TABLE sf_events (
+    account_id TEXT,
+    user_id TEXT,
+    record_date DATE
+);
+
+INSERT INTO sf_events (record_date, account_id, user_id) VALUES
+
+-- ✅ U1 → 3 consecutive days (should be included)
+('2021-01-01', 'A1', 'U1'),
+('2021-01-02', 'A1', 'U1'),
+('2021-01-03', 'A1', 'U1'),
+
+-- ❌ U2 → only 2 days (should NOT be included)
+('2021-01-01', 'A1', 'U2'),
+('2021-01-02', 'A1', 'U2'),
+
+-- ⚠️ U3 → has gap (NOT consecutive)
+('2021-01-01', 'A1', 'U3'),
+('2021-01-03', 'A1', 'U3'),
+('2021-01-04', 'A1', 'U3'),
+
+-- ✅ U4 → 4 consecutive days (should be included)
+('2021-01-02', 'A1', 'U4'),
+('2021-01-03', 'A1', 'U4'),
+('2021-01-04', 'A1', 'U4'),
+('2021-01-05', 'A1', 'U4'),
+
+-- ⚠️ U5 → two separate streaks (only 2 max → NOT included)
+('2021-01-01', 'A1', 'U5'),
+('2021-01-02', 'A1', 'U5'),
+('2021-01-05', 'A1', 'U5'),
+('2021-01-06', 'A1', 'U5'),
+
+-- ✅ U6 → exactly 3 consecutive days (edge case → include)
+('2021-01-07', 'A1', 'U6'),
+('2021-01-08', 'A1', 'U6'),
+('2021-01-09', 'A1', 'U6');
+

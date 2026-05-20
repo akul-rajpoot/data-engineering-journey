@@ -34,3 +34,43 @@ AND w.salary = (
     WHERE t2.worker_title IS NOT NULL
     AND t2.worker_title <> ''
 );
+
+/*Find all posts which were reacted to with a heart. For such posts output all columns from facebook_posts table.*/
+select distinct fp.post_id,fp.poster,fp.post_date,fp.post_text,fp.post_keywords from facebook_posts fp
+join facebook_reactions fr on fp.post_id=fr.post_id
+where fr.reaction='heart';
+
+/*Find all the users who were active for 3 consecutive days or more.*/
+with cte as(
+select user_id,record_date,
+row_number() over(partition by user_id order by record_date) as rn
+from sf_events),
+grp as (
+select user_id,record_date,rn,
+date_sub(record_date, interval rn day) as grp_id
+from cte
+)
+select user_id
+from grp
+group by user_id, grp_id
+having count(*) >= 3;
+
+with cte as (
+select user_id,record_date,
+lag(record_date) over(partition by user_id order by record_date) as prev_date
+from sf_events
+),
+grp as (select *,
+       case 
+			when datediff(record_date, prev_date) = 1 then 0
+            else 1
+            end as flag
+            from cte),
+grp_id as ( select *,
+sum(flag) over(partition by user_id order by record_date) as grp
+from grp
+)
+select user_id
+from grp_id
+group by user_id, grp
+having count(*) >= 3;
