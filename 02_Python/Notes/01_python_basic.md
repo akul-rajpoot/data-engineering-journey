@@ -226,6 +226,34 @@ evens = [num for num in nums if num % 2 == 0]
 * if-else → conditional transformation
 * expression → what to store in list
 
+# 🔹 9. List Function
+Functions help reuse code and make programs cleaner and more structured.
+## 📌 What is a Function?
+A function is a reusable block of code used to perform a specific task.
+---
+
+## 🧠 Basic Syntax
+
+```python
+def function_name(parameters):
+    return result
+```
+
+## Example
+```python
+def add(a, b):
+    return a + b
+print(add(2, 3))
+```
+
+## 🧠 Key Concepts
+
+* Functions avoid repetition
+* Improve readability
+* Make code reusable
+* Follow Input → Process → Output
+
+
 # 🧠 Important Rules
 
 - Do not overwrite built-in functions like `sum`, `max`
@@ -236,14 +264,6 @@ evens = [num for num in nums if num % 2 == 0]
 
 ---
 
-# 🚀 What’s Next?
-
-In Day 2, you will learn:
-- List Comprehension
-- Better Python style
-- More problem-solving
-
----
 
 # 🎯 Summary
 
