@@ -190,11 +190,49 @@ nums = [10, 15, 20, 25, 30]
 
 ---
 
+# 🔹 8. List Comprehension
+
+## 📌 What is List Comprehension?
+
+List comprehension is a concise way to create lists in Python using a single line of code.
+It replaces traditional loops with cleaner and more readable syntax.
+
+## 🧠 Basic Syntax
+
+```python
+[expression for item in iterable]
+```
+
+## Example
+```python 
+nums = [1, 2, 3, 4]
+result = []
+for num in nums:
+    result.append(num * 2)
+
+#list comprehension
+result = [num * 2 for num in nums]
+```
+
+## 🟡 With Condition (Filtering)
+```python 
+nums = [10, 15, 20, 25, 30]
+evens = [num for num in nums if num % 2 == 0]
+```
+## 🧠 Key Concepts
+
+* for → iteration
+* if → filtering
+* if-else → conditional transformation
+* expression → what to store in list
+
 # 🧠 Important Rules
 
 - Do not overwrite built-in functions like `sum`, `max`
 - Always think about edge cases
 - Keep code simple and readable
+- For list comprehension Order matters [expression for item in list if condition]
+
 
 ---
 
