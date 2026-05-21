@@ -12,6 +12,7 @@ Each case study is divided into 3 separate files for clarity and best practices:
 ```
 01_case_study_tables.sql
 02_case_study_tables.sql
+03_case_study_tables.sql
 ```
 - Contains:
   - Table creation (DDL)
@@ -26,6 +27,7 @@ Each case study is divided into 3 separate files for clarity and best practices:
 ```
 01_case_study_questions.sql
 02_case_study_questions.sql
+03_case_study_questions.sql
 ```
 - Contains:
   - Only problem statements
@@ -39,6 +41,7 @@ Each case study is divided into 3 separate files for clarity and best practices:
 ```
 01_case_study_solution.sql
 02_case_study_solution.sql
+03_case_study_solution.sql
 ```
 - Contains:
   - All SQL solutions
