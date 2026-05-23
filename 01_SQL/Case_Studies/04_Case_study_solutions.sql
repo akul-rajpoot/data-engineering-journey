@@ -115,6 +115,7 @@ having count(*) > 1
        end
    ) = 0;
 
+
 #Q4: Find customers who skipped at least 1 day between orders
 with cte as (
 select * ,lag(order_date) over(partition by customer_id order by order_date,order_id ) as prev_date from 
@@ -150,6 +151,7 @@ with cte as (select customer_id,amount,
 lag(amount) over(partition by customer_id order by order_id,order_date) as prev_amount,
 count(*) over(partition by customer_id) as cnt
 from orders08)
+
 select customer_id from cte
 group by customer_id
 having max(cnt) >= 3 and sum( case when prev_amount is not null and amount > prev_amount then 1 else 0 end) = 0;
