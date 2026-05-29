@@ -1,4 +1,7 @@
 use de_practice;
+###########################################################
+# 🚀 🧠 CASE STUDY 9: Ride Sharing + User Behavior Analytics
+###########################################################
 
 #Q1: Find total rides and total fare per user
 select u.user_name,r.user_id,count(*) as total_rides,
@@ -64,6 +67,72 @@ group by user_id
 having max(cnt)>=3 and sum(case when  prev_fare is not null and fare<prev_fare then 1 else 0 end) =0;
 
 select * from rides09;
+
+#############################################
+#🚀 🧠 CASE STUDY 10: E-Commerce Funnel & Conversion Analytics
+############################################
+
+#Q1: Find total number of each event type
+select event_type,count(*) as total_no from events10
+group by event_type;
+
+#Q2:Find users who performed all 3 actions
+select user_id from events10
+group by user_id
+having count(distinct(event_type))=3;
+
+#Q3: Find users who viewed but never purchased
+select user_id
+from events10
+group by user_id
+having
+sum(case when event_type='view' then 1 else 0 end) > 0
+and
+sum(case when event_type='purchase' then 1 else 0 end) = 0;
+
+#Q4: Find conversion rate:
+select 
+count(distinct case when event_type='purchase' then user_id end) * 1.0
+/
+count(distinct case when event_type='view' then user_id end) 
+as conversion_rate
+from events10;
+
+#Q5: Find users whose first event is purchase (suspicious behavior)
+select user_id from (select *,
+row_number() over (partition by user_id order by event_date,event_id) as rn
+from events10)s where rn=1 and event_type='purchase';
+
+#Q6: Find users who added to cart but did not purchase within 1 day
+with cart_events as (select user_id,event_date as adate,event_type from events10
+where event_type='add_to_cart'),
+purchase_events  as (select user_id,event_date  as pdate ,event_type from events10
+where event_type='purchase')
+select distinct c.user_id
+from cart_events c
+left join purchase_events p
+on c.user_id = p.user_id
+and datediff(p.pdate, c.adate) between 0 and 1
+where p.user_id is null;
+
+
+#Q7: Find users who followed correct funnel order:
+with funnel as (select user_id,min(case when event_type='view' then event_date end) as view_date,
+				min(case when event_type='add_to_cart' then event_date end) as cart_date,
+                min(case when event_type='purchase' then event_date end) as purchase_date
+from events10
+group by user_id
+)
+select * from funnel
+where view_date is not null
+  and cart_date is not null
+  and purchase_date is not null
+  and view_date <= cart_date
+  and cart_date <= purchase_date;
+
+
+
+
 
 
 

@@ -50,3 +50,42 @@ INSERT INTO payments08 VALUES
 (7, 107, 'Card'),
 (8, 108, 'UPI'),
 (9, 109, 'Cash');
+
+
+#############################################
+#🚀 🧠 CASE STUDY 10: E-Commerce Funnel & Conversion Analytics
+############################################
+
+CREATE TABLE users10 (
+    user_id INT,
+    user_name VARCHAR(50),
+    signup_date DATE
+);
+
+INSERT INTO users10 VALUES
+(1, 'Amit', '2023-01-01'),
+(2, 'Rahul', '2023-01-02'),
+(3, 'Neha', '2023-01-03'),
+(4, 'Priya', '2023-01-04');
+
+CREATE TABLE events10 (
+    event_id INT,
+    user_id INT,
+    event_type VARCHAR(20),  -- 'view', 'add_to_cart', 'purchase'
+    event_date DATE
+);
+
+INSERT INTO events10 VALUES
+(1, 1, 'view', '2023-01-01'),
+(2, 1, 'add_to_cart', '2023-01-01'),
+(3, 1, 'purchase', '2023-01-02'),
+
+(4, 2, 'view', '2023-01-01'),
+(5, 2, 'add_to_cart', '2023-01-03'),
+
+(6, 3, 'view', '2023-01-01'),
+(7, 3, 'view', '2023-01-02'),
+(8, 3, 'purchase', '2023-01-03'),
+
+(9, 4, 'view', '2023-01-02');
+
