@@ -74,3 +74,88 @@ select user_id
 from grp_id
 group by user_id, grp
 having count(*) >= 3;
+
+## Find all numbers that appear at least three times consecutively.
+with cte as(select num,
+lag(num) over(order by id) as prev_num,
+lead(num) over(order by id) as next_num
+from logs)
+select distinct num from cte
+where num=prev_num and prev_num=next_num;
+
+
+##Q7: Write a solution to find the employees who are high earners in each of the departments.
+with cte as(select e.name as Employee ,d.name as Department,salary,
+dense_rank() over(partition by e.departmentId order by e.salary desc) as rnk from Employee07 e join department07 d
+on e.departmentId=d.id)
+select employee,department,salary from cte where rnk <=3;
+
+
+
+/* Q8 :The cancellation rate is computed by dividing the number of canceled (by client or driver) requests 
+with unbanned usersby the total number of requests with unbanned users on that day.
+Write a solution to find the cancellation rate of requests with unbanned users (both client and driver must not be banned)
+ each day between "2013-10-01" and "2013-10-03" with at least one trip. Round Cancellation Rate to two decimal points.*/
+
+select * from users08;
+select * from Trips08;
+
+with cte as (
+select t.status,t.request_at,c.banned as cl_banned,d.banned as driver_banned from trips08 t
+join users08 c on t.client_id=c.users_id
+ join users08 d on t.driver_id=d.users_id )
+ select request_at as Day,
+ round(1.0*sum(case when cl_banned='No' and driver_banned='No' and status like 'cancelled%'then 1 else 0 end )/
+ sum(case when cl_banned='No' and driver_banned='No' then 1 else 0 end),2) as 'Cancellation Rate'
+from cte 
+group by request_at ;
+
+select request_at as Day,
+round(1.0  * sum(case when status <> 'completed' then 1 else 0 end )/ count(*),2) as 'Cancellation Rate'
+from Trips08 t join users08 c on t.client_id=c.users_id
+join users08 d on t.driver_id=d.users_id
+where c.banned='No' and d.banned='No' and t.request_at between '2013-10-01' and '2013-10-03'
+group by request_at
+order by request_at;
+
+/*Q9:Write a solution to display the records with three or more rows with consecutive id's,and the number of people 
+is greater than or equal to 100 for each.*/	
+WITH cte AS (
+    SELECT *,
+           id - ROW_NUMBER() OVER(ORDER BY id) AS grp
+    FROM stadium09
+    WHERE people >= 100
+)
+SELECT id, visit_date, people
+FROM cte
+WHERE grp IN (
+    SELECT grp
+    FROM cte
+    GROUP BY grp
+    HAVING COUNT(*) >= 3
+)
+ORDER BY visit_date;
+
+#Q10:Write a solution to find the people who have the most friends and the most friends number
+
+with cte as(
+select requester_id as id from RequestAccepted10
+union all
+select accepter_id  as id
+from RequestAccepted10)
+SELECT id, COUNT(*) AS num
+FROM cte
+GROUP BY id
+ORDER BY num DESC
+LIMIT 1;
+
+
+
+
+
+ 
+
+
+
+
+

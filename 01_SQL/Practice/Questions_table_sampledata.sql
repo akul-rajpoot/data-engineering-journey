@@ -196,3 +196,174 @@ INSERT INTO sf_events (record_date, account_id, user_id) VALUES
 ('2021-01-08', 'A1', 'U6'),
 ('2021-01-09', 'A1', 'U6');
 
+#Q6: Find all numbers that appear at least three times consecutively.
+
+CREATE TABLE logs (
+    id INT PRIMARY KEY,
+    num VARCHAR(10)
+);
+
+INSERT INTO logs (id, num) VALUES
+(1, '1'),
+(2, '1'),
+(3, '1'),
+
+(4, '2'),
+(5, '1'),
+
+(6, '2'),
+(7, '2'),
+
+(8, '3'),
+(9, '3'),
+(10, '3'),
+(11, '3'),
+
+(12, '4'),
+(13, '5'),
+(14, '4'),
+
+(15, '6'),
+(16, '6'),
+(17, '6'),
+
+(18, '7'),
+(19, '7'),
+
+(20, '8'),
+(21, '8'),
+(22, '9'),
+(23, '8');
+
+
+#Q7: Write a solution to find the employees who are high earners in each of the departments.
+
+CREATE TABLE Department07 (
+    id INT PRIMARY KEY,
+    name VARCHAR(50)
+);
+
+CREATE TABLE Employee07 (
+    id INT PRIMARY KEY,
+    name VARCHAR(50),
+    salary INT,
+    departmentId INT,
+    FOREIGN KEY (departmentId) REFERENCES Department07(id)
+);
+
+INSERT INTO Department07 (id, name) VALUES
+(1, 'IT'),
+(2, 'HR'),
+(3, 'Finance');
+
+INSERT INTO Employee07 (id, name, salary, departmentId) VALUES
+
+-- IT Department
+(1, 'Amit',   120000, 1),
+(2, 'Neha',   110000, 1),
+(3, 'Raj',    110000, 1),
+(4, 'Priya',  100000, 1),
+(5, 'Karan',   90000, 1),
+(6, 'Sneha',   80000, 1),
+
+-- HR Department
+(7, 'Rohit',   95000, 2),
+(8, 'Pooja',   90000, 2),
+(9, 'Vikas',   85000, 2),
+(10,'Anjali',  85000, 2),
+(11,'Nitin',   80000, 2),
+
+-- Finance Department
+(12,'Arjun',  150000, 3),
+(13,'Megha',  140000, 3),
+(14,'Sonia',  130000, 3),
+(15,'Deepak', 120000, 3),
+(16,'Ravi',   130000, 3);
+
+/* Q8 :The cancellation rate is computed by dividing the number of canceled (by client or driver) requests 
+with unbanned usersby the total number of requests with unbanned users on that day.
+Write a solution to find the cancellation rate of requests with unbanned users (both client and driver must not be banned)
+ each day between "2013-10-01" and "2013-10-03" with at least one trip. Round Cancellation Rate to two decimal points.*/
+
+ CREATE TABLE Users08 (
+    users_id INT PRIMARY KEY,
+    banned VARCHAR(3),
+    role VARCHAR(10)
+);
+
+CREATE TABLE Trips08 (
+    id INT PRIMARY KEY,
+    client_id INT,
+    driver_id INT,
+    city_id INT,
+    status VARCHAR(30),
+    request_at DATE
+);
+
+INSERT INTO Users08 VALUES
+(1, 'No', 'client'),
+(2, 'Yes', 'client'),
+(3, 'No', 'client'),
+(4, 'No', 'client'),
+(10, 'No', 'driver'),
+(11, 'No', 'driver'),
+(12, 'No', 'driver'),
+(13, 'No', 'driver');
+
+INSERT INTO Trips08 VALUES
+(1, 1, 10, 1, 'completed', '2013-10-01'),
+(2, 2, 11, 1, 'cancelled_by_driver', '2013-10-01'),
+(3, 3, 12, 6, 'completed', '2013-10-01'),
+(4, 4, 13, 6, 'cancelled_by_client', '2013-10-01'),
+(5, 1, 10, 1, 'completed', '2013-10-02'),
+(6, 2, 11, 6, 'completed', '2013-10-02'),
+(7, 3, 12, 6, 'completed', '2013-10-02'),
+(8, 2, 12, 12, 'completed', '2013-10-03'),
+(9, 3, 10, 12, 'completed', '2013-10-03'),
+(10, 4, 13, 12, 'cancelled_by_driver', '2013-10-03');
+
+
+/*Q9:Write a solution to display the records with three or more rows with consecutive id's,and the number of people 
+is greater than or equal to 100 for each.*/
+CREATE TABLE Stadium09 (
+    id INT PRIMARY KEY,
+    visit_date DATE,
+    people INT
+);
+INSERT INTO Stadium09 (id, visit_date, people) VALUES
+(1, '2017-01-01', 10),
+(2, '2017-01-02', 109),
+(3, '2017-01-03', 150),
+(4, '2017-01-04', 99),
+(5, '2017-01-05', 145),
+(6, '2017-01-06', 1455),
+(7, '2017-01-07', 199),
+(8, '2017-01-08', 188);
+
+
+#Q10:Write a solution to find the people who have the most friends and the most friends number
+CREATE TABLE RequestAccepted10 (
+    requester_id INT,
+    accepter_id INT,
+    accept_date DATE,
+    PRIMARY KEY (requester_id, accepter_id)
+);
+
+INSERT INTO RequestAccepted10 VALUES
+(1, 2, '2024-01-01'),
+(1, 3, '2024-01-02'),
+(1, 4, '2024-01-03'),
+
+(2, 3, '2024-01-04'),
+(2, 5, '2024-01-05'),
+
+(3, 4, '2024-01-06'),
+(3, 5, '2024-01-07'),
+
+(4, 5, '2024-01-08'),
+
+(6, 1, '2024-01-09'),
+(7, 1, '2024-01-10');
+
+
+
