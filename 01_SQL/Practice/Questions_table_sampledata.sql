@@ -366,4 +366,261 @@ INSERT INTO RequestAccepted10 VALUES
 (7, 1, '2024-01-10');
 
 
+#Q11:Write a solution to report the name and balance of users with a balance higher than 10000. 
+#The balance of an account is equal to the sum of the amounts of all transactions involving that account.
+
+CREATE TABLE Users11 (
+    account INT PRIMARY KEY,
+    name VARCHAR(50)
+);
+
+
+CREATE TABLE Transactions11 (
+    trans_id INT PRIMARY KEY,
+    account INT,
+    amount INT,
+    transacted_on DATE
+);
+
+INSERT INTO Users11 VALUES
+(9001, 'Amit'),
+(9002, 'Neha'),
+(9003, 'Raj'),
+(9004, 'Priya'),
+(9005, 'Karan');
+
+INSERT INTO Transactions11 VALUES
+(1, 9001, 5000, '2024-01-01'),
+(2, 9001, 7000, '2024-01-10'),
+
+(3, 9002, 8000, '2024-01-02'),
+(4, 9002, -2000, '2024-01-15'),
+
+(5, 9003, 15000, '2024-01-03'),
+(6, 9003, -3000, '2024-01-20'),
+
+(7, 9004, 6000, '2024-01-05'),
+(8, 9004, 4000, '2024-01-25'),
+
+(9, 9005, 12000, '2024-01-06'),
+(10, 9005, -5000, '2024-01-28');
+
+
+#Q12:Write a solution to calculate the total time in minutes spent by each employee on each day at the office.
+CREATE TABLE Employees12 (
+    emp_id INT,
+    event_day DATE,
+    in_time INT,
+    out_time INT
+);
+INSERT INTO Employees12 VALUES
+(1, '2024-01-01', 9, 12),
+(1, '2024-01-01', 13, 17),
+
+(1, '2024-01-02', 10, 15),
+
+(2, '2024-01-01', 8, 11),
+(2, '2024-01-01', 12, 16),
+
+(2, '2024-01-02', 9, 18),
+
+(3, '2024-01-01', 10, 12),
+(3, '2024-01-01', 14, 18),
+
+(3, '2024-01-03', 8, 17);
+
+#Q13:Write a solution to report the latest login for all users in the year 2020. Do not include the users who did not login in 2020.
+CREATE TABLE Logins13 (
+    user_id INT,
+    time_stamp DATETIME
+);
+
+INSERT INTO Logins13 VALUES
+(1, '2020-01-15 08:00:00'),
+(1, '2020-06-10 09:15:00'),
+(1, '2020-12-31 23:59:59'),
+
+(2, '2020-03-05 10:30:00'),
+
+(3, '2019-12-31 23:50:00'),
+(3, '2020-01-01 00:05:00'),
+(3, '2020-07-20 14:00:00'),
+
+(4, '2021-01-01 09:00:00'),
+
+(5, '2020-02-14 11:00:00'),
+(5, '2020-02-14 18:00:00'),
+(5, '2020-11-25 20:00:00');
+
+/*Q:14
+Write a solution to find all the valid email addresses. A valid email address meets the following criteria:
+It contains exactly one @ symbol.
+It ends with .com.
+The part before the @ symbol contains only alphanumeric characters and underscores.
+The part after the @ symbol and before .com contains a domain name that contains only letters.
+*/
+
+CREATE TABLE Users14 (
+    user_id INT,
+    email VARCHAR(100),
+    PRIMARY KEY (user_id)
+);
+INSERT INTO Users14 VALUES
+(1, 'alice@example.com'),
+(2, 'bob@gmail.com'),
+(3, 'charlie@yahoo.com'),
+(4, 'david@leetcode.com'),
+(5, 'eve@gmail.com'),
+(6, 'frank@example.com'),
+(7, 'grace@outlookcom'),
+(8, 'invalid_email'),
+(9, 'john.doe@gmail.com'),
+(10, 'test@leetcode');
+
+/*Q15: There is a queue of people waiting to board a bus. However, the bus has a weight limit of 1000 kilograms, 
+so there may be some people who cannot board.
+Write a solution to find the person_name of the last person that can fit on the bus without exceeding the weight limit. 
+The test cases are generated such that the first person does not exceed the weight limit.*/
+
+CREATE TABLE Queue15 (
+    person_id INT,
+    person_name VARCHAR(50),
+    weight INT,
+    turn INT
+);
+
+INSERT INTO Queue15 (person_id, person_name, weight, turn) VALUES
+(5, 'Alice', 250, 1),
+(4, 'Bob', 175, 5),
+(3, 'Alex', 350, 2),
+(6, 'John Cena', 400, 3),
+(1, 'Winston', 500, 6),
+(2, 'Marie', 200, 4);
+
+/*Q16:Write a solution to find all products whose description contains a valid serial number pattern. A valid serial number follows these rules:
+It starts with the letters SN (case-sensitive).
+Followed by exactly 4 digits.
+It must have a hyphen (-) followed by exactly 4 digits.
+The serial number must be within the description (it may not necessarily start at the beginning).*/
+
+CREATE TABLE Products16 (
+    product_id INT PRIMARY KEY,
+    product_name VARCHAR(100),
+    description VARCHAR(255)
+);
+
+INSERT INTO Products16 VALUES
+(1, 'Widget A', 'This is a sample product with SN1234-5678'),
+(2, 'Widget B', 'A product with serial SN9876-1234 in the description'),
+(3, 'Widget C', 'Product SN1234-56789 is available now'),
+(4, 'Widget D', 'No serial number here'),
+(5, 'Widget E', 'Check out SN4321-8765 in this description');
+
+/*Q17:Write a solution to find the sum of amounts for odd and even transactions for each day. If there are no odd or even 
+transactions for a specific date, display as 0.*/
+
+CREATE TABLE transactions17 (
+    transaction_id INT PRIMARY KEY,
+    amount INT,
+    transaction_date DATE
+);
+INSERT INTO transactions17 VALUES
+(1, 150, '2024-07-01'),
+(2, 200, '2024-07-01'),
+(3, 75,  '2024-07-01'),
+(4, 300, '2024-07-02'),
+(5, 50,  '2024-07-02'),
+(6, 120, '2024-07-03');
+
+
+/*Q18: Write a solution to find the students who have shown improvement. A student is considered to have shown 
+improvement if they meet both of these conditions:
+Have taken exams in the same subject on at least two different dates
+Their latest score in that subject is higher than their first score
+*/
+
+CREATE TABLE Scores18 (
+    student_id INT,
+    subject VARCHAR(50),
+    score INT,
+    exam_date DATE,
+    PRIMARY KEY (student_id, subject, exam_date)
+);
+
+INSERT INTO Scores18 VALUES
+(101, 'Math',    70, '2023-01-15'),
+(101, 'Math',    85, '2023-02-15'),
+(101, 'Math',    50, '2022-12-15'),
+(101, 'Physics', 65, '2023-01-15'),
+(101, 'Physics', 60, '2023-02-15'),
+(102, 'Math',    80, '2023-01-15'),
+(102, 'Math',    85, '2023-02-15'),
+(103, 'Math',    90, '2023-01-15'),
+(104, 'Physics', 75, '2023-01-15'),
+(104, 'Physics', 85, '2023-02-15');
+
+
+
+#Q19:Write a solution to report the Capital gain/loss for each stock.
+
+CREATE TABLE Stocks19 (
+    stock_name VARCHAR(50),
+    operation ENUM('Buy','Sell'),
+    operation_day INT,
+    price INT
+);
+
+INSERT INTO Stocks19 VALUES
+('Leetcode','Buy',1,1000),
+('Corona Masks','Buy',2,10),
+('Leetcode','Sell',5,9000),
+('Handbags','Buy',17,30000),
+('Corona Masks','Sell',3,1010),
+('Corona Masks','Buy',4,1000),
+('Corona Masks','Sell',5,500),
+('Corona Masks','Buy',6,1000),
+('Handbags','Sell',29,7000),
+('Corona Masks','Sell',10,10000);
+
+/*Q20:Write a solution to:
+Find users who converted from free trial to paid subscription
+Calculate each user's average daily activity duration during their free trial period (rounded to 2 decimal places)
+Calculate each user's average daily activity duration during their paid subscription period (rounded to 2 decimal places)
+Return the result table ordered by user_id in ascending order.
+The result format is in the following example.
+*/
+CREATE TABLE UserActivity20 (
+    user_id INT,
+    activity_date DATE,
+    activity_type VARCHAR(20),
+    activity_duration INT
+);
+
+INSERT INTO UserActivity20 VALUES
+(1,'2023-01-01','free_trial',45),
+(1,'2023-01-02','free_trial',30),
+(1,'2023-01-05','free_trial',60),
+(1,'2023-01-10','paid',75),
+(1,'2023-01-12','paid',90),
+(1,'2023-01-15','paid',65),
+
+(2,'2023-02-01','free_trial',55),
+(2,'2023-02-03','free_trial',25),
+(2,'2023-02-07','free_trial',50),
+(2,'2023-02-10','cancelled',0),
+
+(3,'2023-03-05','free_trial',70),
+(3,'2023-03-06','free_trial',60),
+(3,'2023-03-08','free_trial',80),
+(3,'2023-03-12','paid',50),
+(3,'2023-03-15','paid',55),
+(3,'2023-03-20','paid',85),
+
+(4,'2023-04-01','free_trial',40),
+(4,'2023-04-03','free_trial',35),
+(4,'2023-04-05','paid',45),
+(4,'2023-04-07','cancelled',0);
+
+
+
 
