@@ -621,6 +621,8 @@ INSERT INTO UserActivity20 VALUES
 (4,'2023-04-05','paid',45),
 (4,'2023-04-07','cancelled',0);
 
+#Q21:
+
 
 
 
