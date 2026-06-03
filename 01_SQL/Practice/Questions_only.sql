@@ -104,4 +104,88 @@ Calculate each user's average daily activity duration during their paid subscrip
 Return the result table ordered by user_id in ascending order.
 The result format is in the following example.
 */
+
+/*Q21:Write a solution to find all books that are currently borrowed (not returned) and have zero copies available
+ in the library.A book is considered currently borrowed if there exists a borrowing record with a NULL return_date*/
+ 
+ 
+ 
+ 
+/*Q22: Write a solution to analyze AI prompt usage patterns based on the following requirements:
+Only include users who have submitted at least 3 prompts.
+Only include users who have submitted at least one prompt with tokens greater than their own average token usage.
+*/
+
+
+/*Q23:Identify distinct product pairs frequently purchased together by the same customers (where product1_id < product2_id)
+For each product pair, determine how many customers purchased both products
+A product pair is considered for recommendation if at least 3 different customers have purchased both products.*/
+
+
+
+/*Q24: Write a solution to identify emotionally consistent users based on the following requirements:
+For each user, count the total number of reactions they have given.
+Only include users who have reacted to at least 5 different content items.
+A user is considered emotionally consistent if at least 60% of their reactions are of the same type.
+*/
+
+
+
+/*Q25:Write a solution to find employees who have consistently improved their performance over their last three reviews.
+An employee must have at least 3 review to be considered -----sorted
+The employee's last 3 reviews must show strictly increasing ratings (each review better than the previous)
+Use the most recent 3 reviews based on review_date for each employee
+Calculate the improvement score as the difference between the latest rating and the earliest rating among the last 3 reviews
+*/
+ 
+
+
+/*Q26: find golden hour customers 
+Made at least 3 orders.
+At least 60% of their orders are during peak hours (11:00-14:00 or 18:00-21:00).
+Their average rating for rated orders is at least 4.0, round it to 2 decimal places.
+Have rated at least 50% of their orders.*/
+
+
+
+
+
+#Q27:Write a solution to find loyal customers
+#-Made at least 3 purchase transactions.
+#-Have been active for at least 30 days.
+#-Their refund rate is less than 20%
+
+
+/*Q28:Write a solution to find the most popular product category for each season. The seasons are defined as:
+Winter: December, January, February
+Spring: March, April, May
+Summer: June, July, August
+Fall: September, October, November
+The popularity of a category is determined by the total quantity sold in that season. If there is a tie, 
+select the category with the highest total revenue (quantity × price). If there is still a tie, 
+return the lexicographically smaller category.
+*/
+
+
+
+
+/*Q29:Write a solution to find patients who have recovered from COVID
+-A patient is considered recovered if they have at least one Positive test followed by at least one Negative 
+test on a later date
+-Calculate the recovery time in days as the difference between the first positive test and the first negative test after that positive test
+-Only include patients who have both positive and negative test results
+*/
+
+
+
+
+
+/*Q30:Write a solution to find stores that have inventory imbalance
+For each store, identify the most expensive product (highest price) and its quantity
+For each store, identify the cheapest product (lowest price) and its quantity
+A store has inventory imbalance if the most expensive product's quantity is less than the cheapest product's quantity
+Calculate the imbalance ratio as (cheapest_quantity / most_expensive_quantity)
+Round the imbalance ratio to 2 decimal places
+Only include stores that have at least 3 different products
+*/
  

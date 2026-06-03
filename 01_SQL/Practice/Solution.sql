@@ -294,10 +294,190 @@ select user_id,trial_avg_duration, average as  paid_avg_duration
 from cte2
 where activity_type='paid' and activity='free_trial';
 
+
+/*Q21:Write a solution to find all books that are currently borrowed (not returned) and have zero copies available
+ in the library.A book is considered currently borrowed if there exists a borrowing record with a NULL return_date*/
+select * from library_books21;
+with cte as (
+select book_id,count(*) as b_count
+from borrowing_records21
+where return_date is null
+group by book_id)
+select lb.book_id,lb.title,lb.author,lb.genre,lb.publication_year,cte.b_count as current_borrowers
+from library_books21 lb join cte on cte.book_id=lb.book_id
+where lb.total_copies-b_count=0;	
  
+ 
+/*Q22: Write a solution to analyze AI prompt usage patterns based on the following requirements:
+Only include users who have submitted at least 3 prompts.
+Only include users who have submitted at least one prompt with tokens greater than their own average token usage.
+*/
+
+select user_id,count(*) as prompt_count,avg(tokens) as avg_tokens
+from prompts22
+group by user_id
+having count(*)>=3 and avg(tokens)<max(tokens)
+order by avg(tokens) desc ;
+
+/*Q23:Identify distinct product pairs frequently purchased together by the same customers (where product1_id < product2_id)
+For each product pair, determine how many customers purchased both products
+A product pair is considered for recommendation if at least 3 different customers have purchased both products.*/
+
+select pb1.product_id as product1_id,pb2.product_id as product2_id,
+pi1.category as product1_category,
+pi2.category as product2_category,
+count(*) as customer_count
+from ProductPurchases23 pb1
+join ProductPurchases23 pb2 on pb1.user_id=pb2.user_id
+left join ProductInfo23 pi1 on pb1.product_id=pi1.product_id
+left join ProductInfo23 pi2 on pb2.product_id=pi2.product_id
+where pb1.product_id<pb2.product_id
+group by pb1.product_id ,pb2.product_id,pi1.category, pi2.category
+having count(*)>2
+order by count(*) desc,pb1.product_id ,pb2.product_id;
+
+/*Q24: Write a solution to identify emotionally consistent users based on the following requirements:
+For each user, count the total number of reactions they have given.
+Only include users who have reacted to at least 5 different content items.
+A user is considered emotionally consistent if at least 60% of their reactions are of the same type.
+*/
+with cte1 as(
+select user_id,reaction,count(reaction) as reac_count
+from reactions24
+group by user_id,reaction),
+cte2 as (
+select user_id,count(*) as user_count
+from reactions24
+group by user_id
+having COUNT(DISTINCT content_id)>4
+)
+select cte1.user_id,cte1.reaction,round(reac_count*1.0/user_count,2) as average
+from cte1
+join cte2 on cte1.user_id=cte2.user_id
+where reac_count/user_count>=0.6;
+
+with cte as (
+    select user_id,reaction,count(*) as reaction_count,
+    sum(count(*)) over (partition by user_id) as total_count
+    from reactions24
+    group by user_id, reaction
+)
+select user_id,reaction as dominant_reaction ,round(
+    reaction_count/total_count
+    ,2) as reaction_ratio from cte
+    where total_count > 4  and round(reaction_count/total_count,2) >= 0.6
+    order by reaction_ratio desc, user_id;
+    
+    
+/*Q25:Write a solution to find employees who have consistently improved their performance over their last three reviews.
+An employee must have at least 3 review to be considered -----sorted
+The employee's last 3 reviews must show strictly increasing ratings (each review better than the previous)
+Use the most recent 3 reviews based on review_date for each employee
+Calculate the improvement score as the difference between the latest rating and the earliest rating among the last 3 reviews
+*/
 
 
+with cte as (select *,
+row_number() over(partition by employee_id order by review_date desc,review_id desc) as rn,
+count(*) over(partition by employee_id) as cnt,
+lag(rating) over(partition by employee_id order by review_date desc,review_id desc) as prev_rating
+from performance_reviews25)
 
+select e.employee_id,e.name,sum(case when rn=1 then +rating when rn=3 then -rating else 0 end) as improvement_score
+from cte join employees25 e on e.employee_id=cte.employee_id
+where cnt>=3 and rn<=3
+group by e.employee_id,e.name
+having sum(case when prev_rating is not null and prev_rating>rating then 1 else 0 end)=2
+order by sum(case when rn=1 then +rating when rn=3 then -rating else 0 end) desc;
 
+/*Q26: find golden hour customers 
+Made at least 3 orders.
+At least 60% of their orders are during peak hours (11:00-14:00 or 18:00-21:00).
+Their average rating for rated orders is at least 4.0, round it to 2 decimal places.
+Have rated at least 50% of their orders.*/
 
+with cte as (select *,
+count(*) over(partition by customer_id) as cnt,
+(case WHEN CAST(order_timestamp  AS TIME) BETWEEN '11:00:00' AND '14:00:00' THEN 1
+when CAST(order_timestamp  AS TIME) BETWEEN '18:00:00' AND '21:00:00' THEN 1 else 0 end) as peak_check,
+round(avg(order_rating) over(partition by customer_id),2) as average
+from restaurant_orders26)
+select customer_id,cnt as total_orders,round((sum(peak_check)/max(cnt))*100,0) as peak_hour_percentage,
+max(average) as average_rating
+from cte 
+group by
+customer_id,cnt
+having cnt>=3 and (sum(peak_check)/max(cnt))*100>=60 
+and (sum(case when order_rating is not null then 1 else 0 end )/max(cnt))>=0.5
+and MAX(average) >= 4;
 
+select customer_id,count(customer_id) as total_orders,round(sum(case when hour(order_timestamp) between 11 and 13 or hour(order_timestamp) between 18 and 20 then 1 else 0 end)*100/count(customer_id),0) as peak_hour_percentage,round(avg(order_rating),2) as average_rating 
+from restaurant_orders
+group by customer_id
+having count(customer_id)>=3 and 
+peak_hour_percentage >= 60 and average_rating >=4 
+and count(order_rating)/count(customer_id)>=0.5
+order by average_rating desc,customer_id desc;
+
+#Q27:Write a solution to find loyal customers
+#-Made at least 3 purchase transactions.
+#-Have been active for at least 30 days.
+#-Their refund rate is less than 20%
+select * from customer_transactions27;
+
+select customer_id
+from customer_transactions27
+group by customer_id
+having COUNT(CASE WHEN transaction_type='purchase' THEN 1 END)>=3 and 
+(count(case when transaction_type='refund' then 1 end)/count(customer_id))<0.2 
+and DATEDIFF(MAX(transaction_date), Min(transaction_date)) >= 30;
+
+/*Q28:Write a solution to find the most popular product category for each season. The seasons are defined as:
+Winter: December, January, February
+Spring: March, April, May
+Summer: June, July, August
+Fall: September, October, November
+The popularity of a category is determined by the total quantity sold in that season. If there is a tie, 
+select the category with the highest total revenue (quantity × price). If there is still a tie, 
+return the lexicographically smaller category.
+*/
+with cte as(
+select
+(case when month(sale_date) in (12,1,2) then 'Winter'
+	  when month(sale_date) in (3,4,5) then'Spring'
+      when month(sale_date) in (6,7,8) then'Summer'
+      else "Fall" end) as season,
+sum(quantity) as total_quantity,p.category ,sum(quantity*price) as total_revenue
+from sales28 s join products28 p on s.product_id=p.product_id
+group by p.category,season)
+select season,total_quantity,category,total_revenue from (select *,
+row_number() over(partition by season order by total_quantity desc,total_revenue desc,category)  as rn 
+from cte)s where s.rn=1 ;
+
+/*29:Write a solution to find patients who have recovered from COVID
+-A patient is considered recovered if they have at least one Positive test followed by at least one Negative 
+test on a later date
+-Calculate the recovery time in days as the difference between the first positive test and the first negative test after that positive test
+-Only include patients who have both positive and negative test results
+*/
+
+with cte as(select patient_id,min(test_date) as positive_date
+from covid_tests29
+where result='positive'
+group by patient_id),
+cte2 as (select cte.patient_id,positive_date,min(ct.test_date) as negative_date
+		from cte join covid_tests29 ct on cte.patient_id=ct.patient_id
+        where positive_date<ct.test_date and ct.result = 'Negative' 
+        group by cte.patient_id,positive_date)
+select c2.patient_id ,p.patient_name,p.age,datediff(negative_date,positive_date) as recovery_time
+from cte2 c2 join patients29 p on p.patient_id=c2.patient_id
+order by datediff(negative_date,positive_date),c2.patient_id;
+
+/*Q30:Write a solution to find stores that have inventory imbalance
+For each store, identify the most expensive product (highest price) and its quantity
+For each store, identify the cheapest product (lowest price) and its quantity
+A store has inventory imbalance if the most expensive product's quantity is less than the cheapest product's quantity
+Calculate the imbalance ratio as (cheapest_quantity / most_expensive_quantity)
+Round the imbalance ratio to 2 decimal places
+Only include stores that have at least 3 different products
+*/

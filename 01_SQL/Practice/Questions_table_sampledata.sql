@@ -621,7 +621,414 @@ INSERT INTO UserActivity20 VALUES
 (4,'2023-04-05','paid',45),
 (4,'2023-04-07','cancelled',0);
 
-#Q21:
+/*Q21:Write a solution to find all books that are currently borrowed (not returned) and have zero copies available
+ in the library.A book is considered currently borrowed if there exists a borrowing record with a NULL return_date*/
+CREATE TABLE library_books21 (
+    book_id INT PRIMARY KEY,
+    title VARCHAR(100),
+    author VARCHAR(100),
+    genre VARCHAR(50),
+    publication_year INT,
+    total_copies INT
+);
+
+CREATE TABLE borrowing_records21 (
+    record_id INT PRIMARY KEY,
+    book_id INT,
+    borrower_name VARCHAR(100),
+    borrow_date DATE,
+    return_date DATE,
+    FOREIGN KEY (book_id) REFERENCES library_books21(book_id)
+);
+
+INSERT INTO library_books21 VALUES
+(1, 'The Great Gatsby', 'F. Scott', 'Fiction', 1925, 3),
+(2, 'To Kill a Mockingbird', 'Harper Lee', 'Fiction', 1960, 3),
+(3, '1984', 'George Orwell', 'Dystopian', 1949, 1),
+(4, 'Pride and Prejudice', 'Jane Austen', 'Romance', 1813, 2),
+(5, 'The Catcher in the Rye', 'J.D. Salinger', 'Fiction', 1951, 1),
+(6, 'Brave New World', 'Aldous Huxley', 'Dystopian', 1932, 4);
+
+INSERT INTO borrowing_records21 VALUES
+(1, 1, 'Alice Smith', '2024-01-15', NULL),
+(2, 1, 'Bob Johnson', '2024-01-20', NULL),
+(3, 2, 'Carol White', '2024-01-10', '2024-01-25'),
+(4, 3, 'David Brown', '2024-02-01', NULL),
+(5, 4, 'Emma Wilson', '2024-01-05', NULL),
+(6, 5, 'Frank Davis', '2024-01-18', '2024-02-10'),
+(7, 1, 'Grace Miller', '2024-02-05', NULL),
+(8, 6, 'Henry Taylor', '2024-01-12', NULL),
+(9, 2, 'Ivan Clark', '2024-02-12', NULL),
+(10, 2, 'Jane Adams', '2024-02-15', NULL);
+
+
+/*Q22: Write a solution to analyze AI prompt usage patterns based on the following requirements:
+Only include users who have submitted at least 3 prompts.
+Only include users who have submitted at least one prompt with tokens greater than their own average token usage.
+*/
+CREATE TABLE prompts22 (
+    user_id INT,
+    prompt VARCHAR(255),
+    tokens INT
+);
+INSERT INTO prompts22 VALUES
+(1, 'Write a blog outline', 120),
+(1, 'Generate SQL query', 80),
+(1, 'Summarize an article', 200),
+
+(2, 'Create resume bullet', 60),
+(2, 'Improve LinkedIn bio', 70),
+
+(3, 'Explain neural networks', 300),
+(3, 'Generate interview Q&A', 250),
+(3, 'Write cover letter', 180),
+(3, 'Optimize Python code', 220);
+
+/*Q23:Identify distinct product pairs frequently purchased together by the same customers (where product1_id < product2_id)
+For each product pair, determine how many customers purchased both products
+A product pair is considered for recommendation if at least 3 different customers have purchased both products.*/
+
+CREATE TABLE ProductInfo23 (
+    product_id INT PRIMARY KEY,
+    category VARCHAR(50),
+    price DECIMAL(10,2)
+);
+
+CREATE TABLE ProductPurchases23 (
+    user_id INT,
+    product_id INT,
+    quantity INT,
+    FOREIGN KEY (product_id) REFERENCES ProductInfo23(product_id)
+);
+
+INSERT INTO ProductInfo23 VALUES
+(101, 'Electronics', 100),
+(102, 'Books', 20),
+(103, 'Clothing', 35),
+(104, 'Kitchen', 50),
+(105, 'Sports', 75);
+
+INSERT INTO ProductPurchases23 VALUES
+(1, 101, 2),
+(1, 102, 1),
+(1, 103, 3),
+
+(2, 101, 1),
+(2, 102, 5),
+(2, 104, 1),
+
+(3, 101, 2),
+(3, 103, 1),
+(3, 105, 4),
+
+(4, 101, 1),
+(4, 102, 1),
+(4, 103, 2),
+(4, 104, 3),
+
+(5, 102, 2),
+(5, 104, 1);
+
+
+/*Q24: Write a solution to identify emotionally consistent users based on the following requirements:
+For each user, count the total number of reactions they have given.
+Only include users who have reacted to at least 5 different content items.
+A user is considered emotionally consistent if at least 60% of their reactions are of the same type.
+*/
+CREATE TABLE reactions24 (
+    user_id INT,
+    content_id INT,
+    reaction VARCHAR(20)
+);
+INSERT INTO reactions24 VALUES
+(1, 101, 'like'),
+(1, 102, 'like'),
+(1, 103, 'like'),
+(1, 104, 'wow'),
+(1, 105, 'like'),
+
+(2, 201, 'like'),
+(2, 202, 'wow'),
+(2, 203, 'sad'),
+(2, 204, 'like'),
+(2, 205, 'wow'),
+
+(3, 301, 'love'),
+(3, 302, 'love'),
+(3, 303, 'love'),
+(3, 304, 'love'),
+(3, 305, 'love');
+
+/*Q25:Write a solution to find employees who have consistently improved their performance over their last three reviews.
+An employee must have at least 3 review to be considered
+The employee's last 3 reviews must show strictly increasing ratings (each review better than the previous)
+Use the most recent 3 reviews based on review_date for each employee
+Calculate the improvement score as the difference between the latest rating and the earliest rating among the last 3 reviews
+*/
+
+CREATE TABLE employees25 (
+    employee_id INT PRIMARY KEY,
+    name VARCHAR(100)
+);
+
+CREATE TABLE performance_reviews25 (
+    review_id INT PRIMARY KEY,
+    employee_id INT,
+    review_date DATE,
+    rating INT,
+    FOREIGN KEY (employee_id) REFERENCES employees25(employee_id)
+);
+
+INSERT INTO employees25 VALUES
+(1, 'Alice Johnson'),
+(2, 'Bob Smith'),
+(3, 'Carol Davis'),
+(4, 'David Wilson'),
+(5, 'Emma Brown');
+
+INSERT INTO performance_reviews25 VALUES
+(1, 1, '2023-01-15', 2),
+(2, 1, '2023-04-15', 3),
+(3, 1, '2023-07-15', 4),
+(4, 1, '2023-10-15', 5),
+
+(5, 2, '2023-02-01', 3),
+(6, 2, '2023-05-01', 2),
+(7, 2, '2023-08-01', 4),
+(8, 2, '2023-11-01', 5),
+
+(9, 3, '2023-03-10', 1),
+(10, 3, '2023-06-10', 2),
+(11, 3, '2023-09-10', 3),
+(12, 3, '2023-12-10', 4),
+
+(13, 4, '2023-01-20', 4),
+(14, 4, '2023-04-20', 4),
+(15, 4, '2023-07-20', 4),
+
+(16, 5, '2023-02-15', 3),
+(17, 5, '2023-05-15', 2);
+
+/*Q26: find golden hour customers 
+Made at least 3 orders.
+At least 60% of their orders are during peak hours (11:00-14:00 or 18:00-21:00).
+Their average rating for rated orders is at least 4.0, round it to 2 decimal places.
+Have rated at least 50% of their orders.*/
+
+CREATE TABLE restaurant_orders26 (
+    order_id INT PRIMARY KEY,
+    customer_id INT,
+    order_timestamp DATETIME,
+    order_amount DECIMAL(10,2),
+    payment_method VARCHAR(20),
+    order_rating INT
+);
+INSERT INTO restaurant_orders26 VALUES
+(1, 101, '2024-03-01 12:30:00', 25.50, 'card', 5),
+(2, 101, '2024-03-02 19:15:00', 32.00, 'app', 4),
+(3, 101, '2024-03-03 13:45:00', 28.75, 'card', 5),
+(4, 101, '2024-03-04 20:30:00', 41.00, 'app', NULL),
+
+(5, 102, '2024-03-01 11:30:00', 18.50, 'cash', 4),
+(6, 102, '2024-03-02 12:00:00', 22.00, 'card', 3),
+(7, 102, '2024-03-03 15:30:00', 19.75, 'cash', NULL),
+
+(8, 103, '2024-03-01 19:00:00', 55.00, 'app', 5),
+(9, 103, '2024-03-02 20:45:00', 48.50, 'app', 4),
+(10, 103, '2024-03-03 18:30:00', 62.00, 'card', 5),
+
+(11, 104, '2024-03-01 10:00:00', 15.00, 'cash', 3),
+(12, 104, '2024-03-02 09:30:00', 18.00, 'cash', 2),
+(13, 104, '2024-03-03 16:00:00', 20.00, 'card', 3),
+
+(14, 105, '2024-03-01 12:15:00', 30.00, 'app', 4),
+(15, 105, '2024-03-02 13:00:00', 35.50, 'app', 5),
+(16, 105, '2024-03-03 11:45:00', 28.00, 'card', 4);
+
+#Q27:Write a solution to find loyal customers
+#-Made at least 3 purchase transactions.
+#-Have been active for at least 30 days.
+#-Their refund rate is less than 20%
+
+CREATE TABLE customer_transactions27 (
+    transaction_id INT PRIMARY KEY,
+    customer_id INT,
+    transaction_date DATE,
+    amount DECIMAL(10,2),
+    transaction_type VARCHAR(20)
+);
+
+INSERT INTO customer_transactions27 VALUES
+(1, 101, '2024-01-05', 150.00, 'purchase'),
+(2, 101, '2024-01-15', 200.00, 'purchase'),
+(3, 101, '2024-02-10', 180.00, 'purchase'),
+(4, 101, '2024-02-20', 250.00, 'purchase'),
+
+(5, 102, '2024-01-10', 100.00, 'purchase'),
+(6, 102, '2024-01-12', 120.00, 'purchase'),
+(7, 102, '2024-01-15', 80.00, 'refund'),
+(8, 102, '2024-01-18', 90.00, 'refund'),
+(9, 102, '2024-02-15', 130.00, 'purchase'),
+
+(10, 103, '2024-01-01', 500.00, 'purchase'),
+(11, 103, '2024-01-02', 450.00, 'purchase'),
+(12, 103, '2024-01-03', 400.00, 'purchase'),
+
+(13, 104, '2024-01-01', 200.00, 'purchase'),
+(14, 104, '2024-02-01', 250.00, 'purchase'),
+(15, 104, '2024-02-15', 300.00, 'purchase'),
+(16, 104, '2024-03-01', 350.00, 'purchase'),
+(17, 104, '2024-03-10', 280.00, 'purchase'),
+(18, 104, '2024-03-15', 100.00, 'refund');
+
+/*Q28:Write a solution to find the most popular product category for each season. The seasons are defined as:
+Winter: December, January, February
+Spring: March, April, May
+Summer: June, July, August
+Fall: September, October, November
+The popularity of a category is determined by the total quantity sold in that season. If there is a tie, 
+select the category with the highest total revenue (quantity × price). If there is still a tie, 
+return the lexicographically smaller category.
+*/
+CREATE TABLE products28 (
+    product_id INT PRIMARY KEY,
+    product_name VARCHAR(100),
+    category VARCHAR(50)
+);
+
+CREATE TABLE sales28 (
+    sale_id INT PRIMARY KEY,
+    product_id INT,
+    sale_date DATE,
+    quantity INT,
+    price DECIMAL(10,2),
+    FOREIGN KEY (product_id) REFERENCES products28(product_id)
+);
+
+INSERT INTO products28 VALUES
+(1, 'Warm Jacket', 'Apparel'),
+(2, 'Designer Jeans', 'Apparel'),
+(3, 'Cutting Board', 'Kitchen'),
+(4, 'Smart Speaker', 'Tech'),
+(5, 'Yoga Mat', 'Fitness');
+
+INSERT INTO sales28 VALUES
+(1, 1, '2023-01-15', 5, 10.00),
+(2, 2, '2023-01-20', 4, 15.00),
+(3, 3, '2023-03-10', 3, 18.00),
+(4, 4, '2023-04-05', 1, 20.00),
+(5, 1, '2023-05-20', 2, 10.00),
+(6, 2, '2023-06-12', 4, 15.00),
+(7, 5, '2023-06-15', 5, 12.00),
+(8, 3, '2023-07-24', 2, 18.00),
+(9, 4, '2023-08-01', 5, 20.00),
+(10, 5, '2023-09-03', 3, 12.00),
+(11, 1, '2023-09-25', 6, 10.00),
+(12, 2, '2023-11-10', 4, 15.00),
+(13, 3, '2023-12-05', 6, 18.00),
+(14, 4, '2023-12-22', 3, 20.00),
+(15, 5, '2024-02-14', 2, 12.00);
+
+
+
+
+/*29:Write a solution to find patients who have recovered from COVID
+-A patient is considered recovered if they have at least one Positive test followed by at least one Negative 
+test on a later date
+-Calculate the recovery time in days as the difference between the first positive test and the first negative test after that positive test
+-Only include patients who have both positive and negative test results
+*/
+
+CREATE TABLE patients29 (
+    patient_id INT PRIMARY KEY,
+    patient_name VARCHAR(100),
+    age INT
+);
+
+CREATE TABLE covid_tests29 (
+    test_id INT PRIMARY KEY,
+    patient_id INT,
+    test_date DATE,
+    result VARCHAR(20),
+    FOREIGN KEY (patient_id) REFERENCES patients29(patient_id)
+);
+INSERT INTO patients29 VALUES
+(1, 'Alice Smith', 28),
+(2, 'Bob Johnson', 35),
+(3, 'Carol Davis', 42),
+(4, 'David Wilson', 31),
+(5, 'Emma Brown', 29);
+
+INSERT INTO covid_tests29 VALUES
+(1, 1, '2023-01-15', 'Positive'),
+(2, 1, '2023-01-25', 'Negative'),
+
+(3, 2, '2023-02-01', 'Positive'),
+(4, 2, '2023-02-05', 'Inconclusive'),
+(5, 2, '2023-02-12', 'Negative'),
+
+(6, 3, '2023-01-20', 'Negative'),
+(7, 3, '2023-02-10', 'Positive'),
+(8, 3, '2023-02-20', 'Negative'),
+
+(9, 4, '2023-01-10', 'Positive'),
+(10, 4, '2023-01-18', 'Positive'),
+
+(11, 5, '2023-02-15', 'Negative'),
+(12, 5, '2023-02-20', 'Negative');
+
+/*Q30:Write a solution to find stores that have inventory imbalance
+For each store, identify the most expensive product (highest price) and its quantity
+For each store, identify the cheapest product (lowest price) and its quantity
+A store has inventory imbalance if the most expensive product's quantity is less than the cheapest product's quantity
+Calculate the imbalance ratio as (cheapest_quantity / most_expensive_quantity)
+Round the imbalance ratio to 2 decimal places
+Only include stores that have at least 3 different products
+*/
+
+CREATE TABLE stores30 (
+    store_id INT PRIMARY KEY,
+    store_name VARCHAR(100),
+    location VARCHAR(100)
+);
+
+CREATE TABLE inventory30 (
+    inventory_id INT PRIMARY KEY,
+    store_id INT,
+    product_name VARCHAR(100),
+    quantity INT,
+    price DECIMAL(10,2),
+    FOREIGN KEY (store_id) REFERENCES stores30(store_id)
+);
+
+INSERT INTO stores30 VALUES
+(1, 'Downtown Tech', 'New York'),
+(2, 'Suburb Mall', 'Chicago'),
+(3, 'City Center', 'Los Angeles'),
+(4, 'Corner Shop', 'Miami'),
+(5, 'Plaza Store', 'Seattle');
+
+INSERT INTO inventory30 VALUES
+(1, 1, 'Laptop', 5, 999.99),
+(2, 1, 'Mouse', 50, 19.99),
+(3, 1, 'Keyboard', 25, 79.99),
+(4, 1, 'Monitor', 15, 299.99),
+
+(5, 2, 'Phone', 3, 699.99),
+(6, 2, 'Charger', 100, 25.99),
+(7, 2, 'Case', 75, 15.99),
+(8, 2, 'Headphones', 20, 149.99),
+
+(9, 3, 'Tablet', 2, 499.99),
+(10, 3, 'Stylus', 80, 29.99),
+(11, 3, 'Cover', 60, 39.99),
+
+(12, 4, 'Watch', 10, 299.99),
+(13, 4, 'Band', 25, 49.99),
+
+(14, 5, 'Camera', 8, 599.99),
+(15, 5, 'Lens', 12, 199.99);
+
 
 
 
