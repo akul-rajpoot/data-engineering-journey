@@ -481,3 +481,368 @@ Calculate the imbalance ratio as (cheapest_quantity / most_expensive_quantity)
 Round the imbalance ratio to 2 decimal places
 Only include stores that have at least 3 different products
 */
+select * from stores30;
+with cte1 as (
+select *,
+row_number() over(partition by store_id order by price desc) as rn1,
+row_number() over(partition by store_id order by price) as rn2,
+count(*) over(partition by store_id) as cnt
+from inventory30)
+
+select c1.store_id,s.store_name,s.location,c1.product_name as most_exp_product,
+c2.product_name as cheapest_product , round(c2.quantity/c1.quantity,2) as imbalance_ratio
+from cte1 c1 join cte1 c2 on c1.store_id=c2.store_id join stores30 s on s.store_id=c1.store_id
+where c1.rn1=1 and c2.rn2=1 and c1.quantity<c2.quantity and c1.cnt>=3
+order by round(c2.quantity/c1.quantity,2) desc
+;
+
+
+ /*Q31: Write a solution to find drivers whose fuel efficiency has improved by comparing their average fuel efficiency in the first half of the year with the second half of the year.
+
+Calculate fuel efficiency as distance_km / fuel_consumed for each trip ----
+First half: January to June, Second half: July to December
+Only include drivers who have trips in both halves of the year
+Calculate the efficiency improvement as (second_half_avg - first_half_avg)
+Round all results to 2 decimal places
+*/
+
+select * from drivers31;
+with cte as(
+select t.driver_id,d.driver_name,round(distance_km/fuel_consumed,2)  as efficiency,
+(case when month(trip_Date) between 1 and 6 then 'first' else 'second' end ) as halfs 
+from trips31 t join drivers31 d on d.driver_id=t.driver_id)
+
+select driver_id,driver_name,round(avg(case when halfs='first' then efficiency else null end),2) as first_half_avg ,
+round(avg(case when halfs='second' then efficiency else null end),2) as second_half_avg,
+round(avg(case when halfs='second' then efficiency else null end) - avg(case when halfs='first' then efficiency else null end),2) as efficiency_improvement
+from cte
+group by 1,2
+having(count(distinct(halfs)))=2 
+order by efficiency_improvement desc;
+
+
+with cte as(SELECT
+    t.driver_id,
+    d.driver_name,
+    ROUND(
+        AVG(
+            CASE
+                WHEN MONTH(trip_date) BETWEEN 1 AND 6
+                THEN distance_km / fuel_consumed
+            END
+        ), 2
+    ) AS first_half_avg,
+
+    ROUND(
+        AVG(
+            CASE
+                WHEN MONTH(trip_date) BETWEEN 7 AND 12
+                THEN distance_km / fuel_consumed
+            END
+        ), 2
+    ) AS second_half_avg,
+
+    ROUND(
+        AVG(
+            CASE
+                WHEN MONTH(trip_date) BETWEEN 7 AND 12
+                THEN distance_km / fuel_consumed
+            END
+        )
+        -
+        AVG(
+            CASE
+                WHEN MONTH(trip_date) BETWEEN 1 AND 6
+                THEN distance_km / fuel_consumed
+            END
+        ), 2
+    ) AS efficiency_improvement
+FROM trips t
+JOIN drivers d
+    ON d.driver_id = t.driver_id
+GROUP BY t.driver_id, d.driver_name
+HAVING
+    COUNT(
+        DISTINCT CASE
+            WHEN MONTH(trip_date) BETWEEN 1 AND 6 THEN 'first'
+            ELSE 'second'
+        END
+    ) = 2
+order by efficiency_improvement desc,d.driver_name)
+select * from cte where efficiency_improvement>0;
+
+/*Q32: Write a solution to find books that have polarized opinions - books that receive both very high 
+ratings and very low ratings from different readers.
+
+A book has polarized opinions if it has at least one rating ≥ 4 and at least one rating ≤ 2
+Only consider books that have at least 5 reading sessions
+Calculate the rating spread as (highest_rating - lowest_rating)
+Calculate the polarization score as the number of extreme ratings (ratings ≤ 2 or ≥ 4) divided by total sessions
+Only include books where polarization score ≥ 0.6 (at least 60% extreme ratings)
+*/
+
+with cte as (
+select b.book_id,b.title,b.author,b.genre,b.pages,max(session_rating)-min(session_rating) as rating_spread,
+round(sum(case when session_rating>=4 or session_rating<=2 then 1 else 0 end)/count(*),2) as polarization_score
+from books b 
+join reading_sessions r on b.book_id=r.book_id 
+group by b.book_id,b.title,b.author,b.genre,b.pages
+having count(r.book_id)>=5 and min(session_rating)<=2 and max(session_rating) >= 4)
+select * from cte where polarization_score>=0.6
+order by polarization_score desc ,title desc ;
+
+
+/*Q33: Write a solution to find employees who are meeting-heavy - employees who spend more than 50% of 
+their working time in meetings during any given week.
+
+Assume a standard work week is 40 hours
+Calculate total meeting hours per employee per week (Monday to Sunday)
+An employee is meeting-heavy if their weekly meeting hours > 20 hours (50% of 40 hours)
+Count how many weeks each employee was meeting-heavy
+Only include employees who were meeting-heavy for at least 2 weeks
+*/
+select e.employee_id,e.employee_name,e.department
+from employees33 e join meetings33 m ;
+
+with cte as(
+SELECT
+    employee_id,
+    YEARWEEK(meeting_date,1) AS week_id,
+    SUM(duration_hours) AS weekly_hours
+FROM meetings33
+GROUP BY employee_id, YEARWEEK(meeting_date,1)
+)
+
+select e.employee_id,e.employee_name,e.department,
+count(case when weekly_hours>20 then 1 end ) as meeting_heavy_weeks
+from employees33 e join cte c on  e.employee_id=c.employee_id
+group by e.employee_id,e.employee_name,e.department 
+having meeting_heavy_weeks>=2 ;
+
+/*Q34:Write a solution to identify skill mastery pathways by analyzing course completion sequences among 
+top-performing students:
+Consider only top-performing students (those who completed at least 5 courses with an average rating of 4 or 
+higher).
+For each top performer, identify the sequence of courses they completed in chronological order.
+Find all consecutive course pairs (Course A → Course B) taken by these students.
+Return the pair frequency, identifying which course transitions are most common among high achievers.
+*/
+
+with cte as(
+select course_name,
+count(*) over(partition by user_id) as cnt,
+avg(course_rating) over(partition by user_id) as average,
+lead(course_name) over(partition by user_id order by completion_date) as next_course 
+from course_completions34)
+
+select course_name as first_course,next_course as second_course , count(*) as transition_count
+from cte
+where cnt>=5 and average>=4 and next_course is not null
+group by course_name,next_course
+order by transition_count desc,first_course,second_course;
+
+
+/*Q35: Amazon wants to understand shopping patterns across product categories. Write a solution to:
+Find all category pairs (where category1 < category2)
+For each category pair, determine the number of unique customers who purchased products from both categories
+A category pair is considered reportable if at least 3 different customers have purchased products from both 
+categories.
+*/
+
+WITH cte AS (
+    SELECT DISTINCT
+           pp.user_id,
+           pi.category
+    FROM ProductPurchases35 pp
+    JOIN ProductInfo35 pi
+      ON pp.product_id = pi.product_id
+)
+select c1.category as category1 ,c2.category as category2,count(distinct(c1.user_id)) as customer_count
+from cte c1 join cte c2 on c1.user_id=c2.user_id
+where c1.category<c2.category
+group by c1.category,c2.category
+having count(distinct(c1.user_id))>=3;
+
+/*Q36:Write a solution to identify behaviorally stable users based on the following definition:
+A user is considered behaviorally stable if there exists a sequence of at least 5 consecutive days such that:
+The user performed exactly one action per day during that period.
+The action is the same on all those consecutive days.
+If a user has multiple qualifying sequences, only consider the sequence with the maximum length.
+*/
+
+with cte as(
+select *,date_sub(action_date,interval rn day) as flag_date from (
+select *,
+row_number() over(partition by user_id,action order by action_date) as rn 
+from activity36)s)
+select user_id,action,count(*) as streak_length,min(action_date) as start_date,
+max(action_date) as end_date
+from cte group by user_id,action,flag_date 
+having count(user_id)>=5 ;
+
+
+
+/*Q37:Write a solution to find students who follow the Study Spiral Pattern - students who consistently study multiple subjects in a rotating cycle.
+
+A Study Spiral Pattern means a student studies at least 3 different subjects in a repeating sequence
+The pattern must repeat for at least 2 complete cycles (minimum 6 study sessions)
+Sessions must be consecutive dates with no gaps longer than 2 days between sessions
+Calculate the cycle length (number of different subjects in the pattern)
+Calculate the total study hours across all sessions in the pattern
+Only include students with cycle length of at least 3 subjects
+*/
+
+WITH sessions AS (SELECT *,
+ROW_NUMBER() OVER(PARTITION BY student_id ORDER BY session_date) AS rn,
+LAG(session_date) OVER(PARTITION BY student_id ORDER BY session_date) AS prev_date
+FROM study_sessions37
+),
+student_info AS (SELECT student_id,COUNT(DISTINCT subject) AS cycle_length,COUNT(*) AS total_sessions,
+SUM(hours_studied) AS total_study_hours FROM study_sessions37
+GROUP BY student_id
+HAVING COUNT(DISTINCT subject) >= 3
+AND COUNT(*) >= COUNT(DISTINCT subject) * 2
+),
+matches AS (SELECT s1.student_id,COUNT(*) AS matched_pairs
+FROM sessions s1 JOIN student_info si
+ON s1.student_id = si.student_id
+JOIN sessions s2
+ON s1.student_id = s2.student_id
+AND s2.rn = s1.rn + si.cycle_length
+AND s1.subject = s2.subject
+GROUP BY s1.student_id
+),
+gap_check AS (SELECT student_id,MAX(
+CASE WHEN prev_date IS NULL THEN 0 ELSE DATEDIFF(session_date, prev_date)END
+) AS max_gap
+FROM sessions
+GROUP BY student_id
+)
+
+SELECT st.student_id,st.student_name,st.major,si.cycle_length,si.total_study_hours
+FROM student_info si JOIN matches m
+ON si.student_id = m.student_id
+JOIN students37 st ON st.student_id = si.student_id
+join gap_check	g ON si.student_id = g.student_id
+WHERE m.matched_pairs >= si.cycle_length  AND g.max_gap <= 2;
+
+/*Q38:Write a solution to identify zombie sessions, sessions where users appear active but show abnormal behavior patterns.
+A session is considered a zombie session if it meets ALL the following criteria:
+The session duration is more than 30 minutes.
+Has at least 5 scroll events.
+The click-to-scroll ratio is less than 0.20 .
+No purchases were made during the session.
+*/
+select session_id,user_id,
+TIMESTAMPDIFF(MINUTE, min(event_timestamp),max(event_timestamp)) as session_duration_minutes,
+count(case when event_type='scroll' then 1 end ) as scroll_count
+from app_events38
+group by session_id,user_id
+HAVING
+	session_duration_minutes > 30
+	AND COUNT(CASE WHEN event_type='scroll' THEN 1 END) >= 5
+    AND (COUNT(CASE WHEN event_type='click' THEN 1 END) * 1.0/COUNT(CASE WHEN event_type='scroll' THEN 1 END)) < 0.20
+    AND SUM( CASE WHEN event_type='purchase' THEN 1 ELSE 0 END) = 0;
+
+
+/*Q39:Write a solution to transform the text in the content_text column by applying the following rules:
+
+Convert the first letter of each word to uppercase and the remaining letters to lowercase
+Special handling for words containing special characters:
+For words connected with a hyphen -, both parts should be capitalized (e.g., top-rated → Top-Rated)
+All other formatting and spacing should remain unchanged
+*/
+
+WITH RECURSIVE cte1 AS (
+   SELECT content_id,
+          content_text AS text,
+          LENGTH(content_text) AS len 
+   FROM user_content39
+),
+
+cte2 AS (
+    SELECT content_id,1 AS idx,text,len,
+           SUBSTRING(text,1,1) AS charr 
+    FROM cte1
+    
+    UNION ALL
+    
+    SELECT content_id,idx+1,text,len,
+           SUBSTRING(text,idx+1,1) AS charr
+    FROM cte2
+    WHERE idx+1 <= len
+),
+
+cte3 AS (
+    SELECT content_id,idx,text,len,charr,
+           LAG(charr,1,' ') OVER(PARTITION BY content_id ORDER BY idx) AS prv,
+           LEAD(charr,1,' ') OVER(PARTITION BY content_id ORDER BY idx) AS nxt,
+           SUM(CASE WHEN charr=' ' THEN 1 ELSE 0 END)
+           OVER(PARTITION BY content_id ORDER BY idx) AS token_id
+    FROM cte2
+),
+
+cte4 AS (
+    SELECT content_id,idx,text,len,charr,prv,nxt,token_id,
+    
+           -- detect consecutive dashes ("--")
+           SUM(CASE WHEN charr='-' AND prv='-' THEN 1 ELSE 0 END)
+           OVER(PARTITION BY content_id,token_id) AS double_dash,
+    
+           -- detect invalid characters
+           SUM(CASE 
+               WHEN charr NOT REGEXP '^[A-Za-z0-9 \\-]$'
+               THEN 1 ELSE 0 
+           END) OVER(PARTITION BY content_id,token_id) AS invalid_count,
+    
+           -- detect boundary dashes
+           SUM(CASE 
+               WHEN charr='-' AND (prv=' ' OR nxt=' ') 
+               THEN 1 ELSE 0 
+           END) OVER(PARTITION BY content_id,token_id) AS bndry_dash
+    
+    FROM cte3
+),
+
+cte5 AS (
+    SELECT content_id,idx,text,len,charr,
+    
+           CASE
+               WHEN prv=' ' THEN UPPER(charr)
+               WHEN prv='-' AND double_dash=0 AND invalid_count=0 AND bndry_dash=0
+                    THEN UPPER(charr)
+               ELSE LOWER(charr)
+           END AS final_char
+    
+    FROM cte4
+)
+
+SELECT content_id,
+       text AS original_text,
+       GROUP_CONCAT(final_char ORDER BY idx ASC SEPARATOR '') AS converted_text
+FROM cte5
+GROUP BY content_id, text;
+
+
+/*Q40:Write a solution to Find Churn Risk Customers - users who show warning signs before churning. A user is considered churn risk customer if they meet ALL the following criteria:
+
+Currently have an active subscription (their last event is not cancel).
+Have performed at least one downgrade in their subscription history.
+Their current plan revenue is less than 50% of their historical maximum plan revenue.
+Have been a subscriber for at least 60 days.*/
+with cte as(
+select *,
+row_number() over(partition by user_id order by event_date desc,event_id desc) as rn,
+MAX(monthly_amount) OVER (PARTITION BY user_id) AS max_revenue,
+MIN(event_date) OVER (PARTITION BY user_id) AS first_event_date,
+MAX(CASE WHEN event_type = 'downgrade' THEN 1 ELSE 0 END) OVER (PARTITION BY user_id) AS downgrade_flag
+from subscription_events40)
+select user_id,plan_name as  current_plan, monthly_amount as current_monthly_amount,
+max_revenue as max_historical_amount ,DATEDIFF(event_date, first_event_date) AS  days_as_subscriber
+from cte
+WHERE rn = 1 and
+event_type<>'cancel'  
+AND downgrade_flag = 1
+AND monthly_amount < max_revenue * 0.5
+AND DATEDIFF(event_date, first_event_date)>=60
+order by days_as_subscriber desc,user_id;

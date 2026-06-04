@@ -189,3 +189,98 @@ Round the imbalance ratio to 2 decimal places
 Only include stores that have at least 3 different products
 */
  
+ 
+ /*Q31: Write a solution to find drivers whose fuel efficiency has improved by comparing their average fuel efficiency in the first half of the year with the second half of the year.
+
+Calculate fuel efficiency as distance_km / fuel_consumed for each trip
+First half: January to June, Second half: July to December
+Only include drivers who have trips in both halves of the year
+Calculate the efficiency improvement as (second_half_avg - first_half_avg)
+Round all results to 2 decimal places
+*/
+
+
+/*Q32: Write a solution to find books that have polarized opinions - books that receive both very high ratings and very low ratings from different readers.
+
+A book has polarized opinions if it has at least one rating ≥ 4 and at least one rating ≤ 2
+Only consider books that have at least 5 reading sessions
+Calculate the rating spread as (highest_rating - lowest_rating)
+Calculate the polarization score as the number of extreme ratings (ratings ≤ 2 or ≥ 4) divided by total sessions
+Only include books where polarization score ≥ 0.6 (at least 60% extreme ratings)
+*/
+
+/*Q33: Write a solution to find employees who are meeting-heavy - employees who spend more than 50% of their working time in meetings during any given week.
+
+Assume a standard work week is 40 hours
+Calculate total meeting hours per employee per week (Monday to Sunday)
+An employee is meeting-heavy if their weekly meeting hours > 20 hours (50% of 40 hours)
+Count how many weeks each employee was meeting-heavy
+Only include employees who were meeting-heavy for at least 2 weeks
+*/
+
+/*Q34:Write a solution to identify skill mastery pathways by analyzing course completion sequences among 
+top-performing students:
+Consider only top-performing students (those who completed at least 5 courses with an average rating of 4 or 
+higher).
+For each top performer, identify the sequence of courses they completed in chronological order.
+Find all consecutive course pairs (Course A → Course B) taken by these students.
+Return the pair frequency, identifying which course transitions are most common among high achievers.
+*/
+
+
+
+/*Q35: Amazon wants to understand shopping patterns across product categories. Write a solution to:
+Find all category pairs (where category1 < category2)
+For each category pair, determine the number of unique customers who purchased products from both categories
+A category pair is considered reportable if at least 3 different customers have purchased products from both 
+categories.
+*/
+
+
+
+/*Q36:Write a solution to identify behaviorally stable users based on the following definition:
+A user is considered behaviorally stable if there exists a sequence of at least 5 consecutive days such that:
+The user performed exactly one action per day during that period.
+The action is the same on all those consecutive days.
+If a user has multiple qualifying sequences, only consider the sequence with the maximum length.
+*/
+
+
+
+/*Q37:Write a solution to find students who follow the Study Spiral Pattern - students who consistently study multiple subjects in a rotating cycle.
+
+A Study Spiral Pattern means a student studies at least 3 different subjects in a repeating sequence
+The pattern must repeat for at least 2 complete cycles (minimum 6 study sessions)
+Sessions must be consecutive dates with no gaps longer than 2 days between sessions
+Calculate the cycle length (number of different subjects in the pattern)
+Calculate the total study hours across all sessions in the pattern
+Only include students with cycle length of at least 3 subjects
+*/
+
+
+
+
+/*Q38:Write a solution to identify zombie sessions, sessions where users appear active but show abnormal behavior patterns.
+A session is considered a zombie session if it meets ALL the following criteria:
+The session duration is more than 30 minutes.
+Has at least 5 scroll events.
+The click-to-scroll ratio is less than 0.20 .
+No purchases were made during the session.
+*/
+
+
+/*Q39:Write a solution to transform the text in the content_text column by applying the following rules:
+
+Convert the first letter of each word to uppercase and the remaining letters to lowercase
+Special handling for words containing special characters:
+For words connected with a hyphen -, both parts should be capitalized (e.g., top-rated → Top-Rated)
+All other formatting and spacing should remain unchanged
+*/
+
+/*Q40:Write a solution to Find Churn Risk Customers - users who show warning signs before churning. A user is considered churn risk customer if they meet ALL the following criteria:
+
+Currently have an active subscription (their last event is not cancel).
+Have performed at least one downgrade in their subscription history.
+Their current plan revenue is less than 50% of their historical maximum plan revenue.
+Have been a subscriber for at least 60 days.*/
+

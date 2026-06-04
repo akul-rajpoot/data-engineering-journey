@@ -1031,5 +1031,459 @@ INSERT INTO inventory30 VALUES
 
 
 
+ /*Q31: Write a solution to find drivers whose fuel efficiency has improved by comparing their 
+ average fuel efficiency in the first half of the year with the second half of the year.
+Calculate fuel efficiency as distance_km / fuel_consumed for each trip
+First half: January to June, Second half: July to December
+Only include drivers who have trips in both halves of the year
+Calculate the efficiency improvement as (second_half_avg - first_half_avg)
+Round all results to 2 decimal places
+*/
+CREATE TABLE drivers31 (
+    driver_id INT PRIMARY KEY,
+    driver_name VARCHAR(100)
+);
+
+CREATE TABLE trips31 (
+    trip_id INT PRIMARY KEY,
+    driver_id INT,
+    trip_date DATE,
+    distance_km DECIMAL(10,2),
+    fuel_consumed DECIMAL(10,2),
+    FOREIGN KEY (driver_id) REFERENCES drivers31(driver_id)
+);
+
+INSERT INTO drivers31 VALUES
+(1, 'Alice Johnson'),
+(2, 'Bob Smith'),
+(3, 'Carol Davis'),
+(4, 'David Wilson'),
+(5, 'Emma Brown');
+
+INSERT INTO trips31 VALUES
+(1, 1, '2023-02-15', 120.5, 10.2),
+(2, 1, '2023-03-20', 200.0, 16.5),
+(3, 1, '2023-08-10', 150.0, 11.0),
+(4, 1, '2023-09-25', 180.0, 12.5),
+
+(5, 2, '2023-01-10', 100.0, 9.0),
+(6, 2, '2023-04-15', 250.0, 22.0),
+(7, 2, '2023-10-05', 200.0, 15.0),
+
+(8, 3, '2023-03-12', 80.0, 8.5),
+(9, 3, '2023-05-18', 90.0, 9.2),
+
+(10, 4, '2023-07-22', 160.0, 12.8),
+(11, 4, '2023-11-30', 140.0, 11.0),
+
+(12, 5, '2023-02-28', 110.0, 11.5);
+
+/*Q32: Write a solution to find books that have polarized opinions - books that receive both very high ratings and very low ratings from different readers.
+
+A book has polarized opinions if it has at least one rating ≥ 4 and at least one rating ≤ 2
+Only consider books that have at least 5 reading sessions
+Calculate the rating spread as (highest_rating - lowest_rating)
+Calculate the polarization score as the number of extreme ratings (ratings ≤ 2 or ≥ 4) divided by total sessions
+Only include books where polarization score ≥ 0.6 (at least 60% extreme ratings)
+*/
+
+
+CREATE TABLE books32 (
+    book_id INT PRIMARY KEY,
+    title VARCHAR(100),
+    author VARCHAR(100),
+    genre VARCHAR(50),
+    pages INT
+);
+
+CREATE TABLE reading_sessions32 (
+    session_id INT PRIMARY KEY,
+    book_id INT,
+    reader_name VARCHAR(100),
+    pages_read INT,
+    session_rating INT,
+    FOREIGN KEY (book_id) REFERENCES books32(book_id)
+);
+
+INSERT INTO books32 VALUES
+(1,'The Great Gatsby','F. Scott','Fiction',180),
+(2,'To Kill a Mockingbird','Harper Lee','Fiction',281),
+(3,'1984','George Orwell','Dystopian',328),
+(4,'Pride and Prejudice','Jane Austen','Romance',432),
+(5,'The Catcher in the Rye','J.D. Salinger','Fiction',277);
+
+INSERT INTO reading_sessions32 VALUES
+(1,1,'Alice',50,5),
+(2,1,'Bob',60,1),
+(3,1,'Carol',40,4),
+(4,1,'David',30,2),
+(5,1,'Emma',45,5),
+(6,2,'Frank',80,4),
+(7,2,'Grace',70,4),
+(8,2,'Henry',90,5),
+(9,2,'Ivy',60,4),
+(10,2,'Jack',75,4),
+(11,3,'Kate',100,2),
+(12,3,'Liam',120,1),
+(13,3,'Mia',80,2),
+(14,3,'Noah',90,1),
+(15,3,'Olivia',110,4),
+(16,3,'Paul',95,5),
+(17,4,'Quinn',150,3),
+(18,4,'Ruby',140,3),
+(19,5,'Sam',80,1),
+(20,5,'Tara',70,2);
+
+/*Q33: Write a solution to find employees who are meeting-heavy - employees who spend more than 50% of their working time in meetings during any given week.
+
+Assume a standard work week is 40 hours
+Calculate total meeting hours per employee per week (Monday to Sunday)
+An employee is meeting-heavy if their weekly meeting hours > 20 hours (50% of 40 hours)
+Count how many weeks each employee was meeting-heavy
+Only include employees who were meeting-heavy for at least 2 weeks
+*/
+CREATE TABLE employees33 (
+    employee_id INT PRIMARY KEY,
+    employee_name VARCHAR(100),
+    department VARCHAR(50)
+);
+
+CREATE TABLE meetings33 (
+    meeting_id INT PRIMARY KEY,
+    employee_id INT,
+    meeting_date DATE,
+    meeting_type VARCHAR(50),
+    duration_hours DECIMAL(5,2),
+    FOREIGN KEY (employee_id) REFERENCES employees33(employee_id)
+);
+
+INSERT INTO employees33 VALUES
+(1, 'Alice Johnson', 'Engineering'),
+(2, 'Bob Smith', 'Marketing'),
+(3, 'Carol Davis', 'Sales'),
+(4, 'David Wilson', 'Engineering'),
+(5, 'Emma Brown', 'HR');
+
+INSERT INTO meetings33 VALUES
+(1, 1, '2023-06-05', 'Team', 8.0),
+(2, 1, '2023-06-06', 'Client', 6.0),
+(3, 1, '2023-06-07', 'Training', 7.0),
+(4, 1, '2023-06-12', 'Team', 12.0),
+(5, 1, '2023-06-13', 'Client', 9.0),
+
+(6, 2, '2023-06-05', 'Team', 15.0),
+(7, 2, '2023-06-06', 'Client', 8.0),
+(8, 2, '2023-06-12', 'Training', 10.0),
+
+(9, 3, '2023-06-05', 'Team', 4.0),
+(10, 3, '2023-06-06', 'Client', 3.0),
+
+(11, 4, '2023-06-05', 'Team', 25.0),
+(12, 4, '2023-06-19', 'Client', 22.0),
+
+(13, 5, '2023-06-05', 'Training', 2.0);
+
+/*Q34:Write a solution to identify skill mastery pathways by analyzing course completion sequences among 
+top-performing students:
+Consider only top-performing students (those who completed at least 5 courses with an average rating of 4 or 
+higher).
+For each top performer, identify the sequence of courses they completed in chronological order.
+Find all consecutive course pairs (Course A → Course B) taken by these students.
+Return the pair frequency, identifying which course transitions are most common among high achievers.
+*/
+CREATE TABLE course_completions34 (
+    user_id INT,
+    course_id INT,
+    course_name VARCHAR(100),
+    completion_date DATE,
+    course_rating INT
+);
+
+INSERT INTO course_completions34 VALUES
+(1,101,'Python Basics','2024-01-05',5),
+(1,102,'SQL Fundamentals','2024-02-10',4),
+(1,103,'JavaScript','2024-03-15',5),
+(1,104,'React Basics','2024-04-20',4),
+(1,105,'Node.js','2024-05-25',5),
+(1,106,'Docker','2024-06-30',4),
+
+(2,101,'Python Basics','2024-01-08',4),
+(2,104,'React Basics','2024-02-14',5),
+(2,105,'Node.js','2024-03-20',4),
+(2,106,'Docker','2024-04-25',5),
+(2,107,'AWS Fundamentals','2024-05-30',4),
+
+(3,101,'Python Basics','2024-01-10',3),
+(3,102,'SQL Fundamentals','2024-02-12',3),
+(3,103,'JavaScript','2024-03-18',3),
+(3,104,'React Basics','2024-04-22',2),
+(3,105,'Node.js','2024-05-28',3),
+
+(4,101,'Python Basics','2024-01-12',5),
+(4,108,'Data Science','2024-02-16',5),
+(4,109,'Machine Learning','2024-03-22',5);
+
+
+/*Q35: Amazon wants to understand shopping patterns across product categories. Write a solution to:
+Find all category pairs (where category1 < category2)
+For each category pair, determine the number of unique customers who purchased products from both categories
+A category pair is considered reportable if at least 3 different customers have purchased products from both 
+categories.
+*/
+CREATE TABLE ProductInfo35 (
+    product_id INT PRIMARY KEY,
+    category VARCHAR(50),
+    price DECIMAL(10,2)
+);
+
+CREATE TABLE ProductPurchases35 (
+    user_id INT,
+    product_id INT,
+    quantity INT,
+    FOREIGN KEY (product_id) REFERENCES ProductInfo35(product_id)
+);
+
+INSERT INTO ProductInfo35 VALUES
+(101, 'Electronics', 100),
+(102, 'Books', 20),
+(103, 'Books', 35),
+(201, 'Clothing', 45),
+(202, 'Clothing', 60),
+(301, 'Sports', 75),
+(401, 'Kitchen', 50);
+
+INSERT INTO ProductPurchases35 VALUES
+(1, 101, 2),
+(1, 102, 1),
+(1, 201, 3),
+(1, 301, 1),
+
+(2, 101, 1),
+(2, 102, 2),
+(2, 103, 1),
+(2, 201, 5),
+
+(3, 101, 2),
+(3, 103, 1),
+(3, 301, 4),
+(3, 401, 2),
+
+(4, 101, 1),
+(4, 201, 3),
+(4, 301, 1),
+(4, 401, 2),
+
+(5, 102, 2),
+(5, 103, 1),
+(5, 201, 2),
+(5, 202, 3);
+
+
+/*Q36:Write a solution to identify behaviorally stable users based on the following definition:
+A user is considered behaviorally stable if there exists a sequence of at least 5 consecutive days such that:
+The user performed exactly one action per day during that period.
+The action is the same on all those consecutive days.
+If a user has multiple qualifying sequences, only consider the sequence with the maximum length.
+*/
+
+CREATE TABLE activity36 (
+    user_id INT,
+    action_date DATE,
+    action VARCHAR(20)
+);
+
+INSERT INTO activity36 VALUES
+(1, '2024-01-01', 'login'),
+(1, '2024-01-02', 'login'),
+(1, '2024-01-03', 'login'),
+(1, '2024-01-04', 'login'),
+(1, '2024-01-05', 'login'),
+(1, '2024-01-06', 'logout'),
+
+(2, '2024-01-01', 'click'),
+(2, '2024-01-02', 'click'),
+(2, '2024-01-03', 'click'),
+(2, '2024-01-04', 'click'),
+
+(3, '2024-01-01', 'view'),
+(3, '2024-01-02', 'view'),
+(3, '2024-01-03', 'view'),
+(3, '2024-01-04', 'view'),
+(3, '2024-01-05', 'view'),
+(3, '2024-01-06', 'view'),
+(3, '2024-01-07', 'view');
+
+/*Q37:Write a solution to find students who follow the Study Spiral Pattern - students who consistently study multiple subjects in a rotating cycle.
+
+A Study Spiral Pattern means a student studies at least 3 different subjects in a repeating sequence
+The pattern must repeat for at least 2 complete cycles (minimum 6 study sessions)
+Sessions must be consecutive dates with no gaps longer than 2 days between sessions
+Calculate the cycle length (number of different subjects in the pattern)
+Calculate the total study hours across all sessions in the pattern
+Only include students with cycle length of at least 3 subjects
+*/
+
+
+
+CREATE TABLE students37 (
+    student_id INT PRIMARY KEY,
+    student_name VARCHAR(100),
+    major VARCHAR(100)
+);
+
+CREATE TABLE study_sessions37 (
+    session_id INT PRIMARY KEY,
+    student_id INT,
+    subject VARCHAR(100),
+    session_date DATE,
+    hours_studied DECIMAL(4,1),
+    FOREIGN KEY (student_id) REFERENCES students37(student_id)
+);
+
+INSERT INTO students37 VALUES
+(1, 'Alice Chen', 'Computer Science'),
+(2, 'Bob Johnson', 'Mathematics'),
+(3, 'Carol Davis', 'Physics'),
+(4, 'David Wilson', 'Chemistry'),
+(5, 'Emma Brown', 'Biology');
+
+INSERT INTO study_sessions37 VALUES
+(1, 1, 'Math', '2023-10-01', 2.5),
+(2, 1, 'Physics', '2023-10-02', 3.0),
+(3, 1, 'Chemistry', '2023-10-03', 2.0),
+(4, 1, 'Math', '2023-10-04', 2.5),
+(5, 1, 'Physics', '2023-10-05', 3.0),
+(6, 1, 'Chemistry', '2023-10-06', 2.0),
+
+(7, 2, 'Algebra', '2023-10-01', 4.0),
+(8, 2, 'Calculus', '2023-10-02', 3.5),
+(9, 2, 'Statistics', '2023-10-03', 2.5),
+(10, 2, 'Geometry', '2023-10-04', 3.0),
+(11, 2, 'Algebra', '2023-10-05', 4.0),
+(12, 2, 'Calculus', '2023-10-06', 3.5),
+(13, 2, 'Statistics', '2023-10-07', 2.5),
+(14, 2, 'Geometry', '2023-10-08', 3.0),
+
+(15, 3, 'Biology', '2023-10-01', 2.0),
+(16, 3, 'Chemistry', '2023-10-02', 2.5),
+(17, 3, 'Biology', '2023-10-03', 2.0),
+(18, 3, 'Chemistry', '2023-10-04', 2.5),
+
+(19, 4, 'Organic', '2023-10-01', 3.0),
+(20, 4, 'Physical', '2023-10-05', 2.5);
+
+
+/*Q38:Write a solution to identify zombie sessions, sessions where users appear active but show abnormal behavior patterns.
+A session is considered a zombie session if it meets ALL the following criteria:
+The session duration is more than 30 minutes.
+Has at least 5 scroll events.
+The click-to-scroll ratio is less than 0.20 .
+No purchases were made during the session.
+*/
+
+
+CREATE TABLE app_events38 (
+    event_id INT PRIMARY KEY,
+    user_id INT,
+    event_timestamp DATETIME,
+    event_type VARCHAR(20),
+    session_id VARCHAR(10),
+    event_value INT
+);
+
+INSERT INTO app_events38 VALUES
+(1, 201, '2024-03-01 10:00:00', 'app_open',  'S001', NULL),
+(2, 201, '2024-03-01 10:05:00', 'scroll',    'S001', 500),
+(3, 201, '2024-03-01 10:10:00', 'scroll',    'S001', 750),
+(4, 201, '2024-03-01 10:15:00', 'scroll',    'S001', 600),
+(5, 201, '2024-03-01 10:20:00', 'scroll',    'S001', 800),
+(6, 201, '2024-03-01 10:25:00', 'scroll',    'S001', 550),
+(7, 201, '2024-03-01 10:30:00', 'scroll',    'S001', 900),
+(8, 201, '2024-03-01 10:35:00', 'app_close', 'S001', NULL),
+
+(9, 202, '2024-03-01 11:00:00', 'app_open',  'S002', NULL),
+(10, 202, '2024-03-01 11:02:00', 'click',    'S002', NULL),
+(11, 202, '2024-03-01 11:05:00', 'scroll',   'S002', 400),
+(12, 202, '2024-03-01 11:08:00', 'click',    'S002', NULL),
+(13, 202, '2024-03-01 11:10:00', 'scroll',   'S002', 350),
+(14, 202, '2024-03-01 11:15:00', 'purchase', 'S002', 50),
+(15, 202, '2024-03-01 11:20:00', 'app_close','S002', NULL),
+
+(16, 203, '2024-03-01 12:00:00', 'app_open', 'S003', NULL),
+(17, 203, '2024-03-01 12:10:00', 'scroll',   'S003', 1000),
+(18, 203, '2024-03-01 12:20:00', 'scroll',   'S003', 1200),
+(19, 203, '2024-03-01 12:25:00', 'click',    'S003', NULL),
+(20, 203, '2024-03-01 12:30:00', 'scroll',   'S003', 800),
+(21, 203, '2024-03-01 12:40:00', 'scroll',   'S003', 900),
+(22, 203, '2024-03-01 12:50:00', 'scroll',   'S003', 1100),
+(23, 203, '2024-03-01 13:00:00', 'app_close','S003', NULL),
+
+(24, 204, '2024-03-01 14:00:00', 'app_open', 'S004', NULL),
+(25, 204, '2024-03-01 14:05:00', 'scroll',   'S004', 600),
+(26, 204, '2024-03-01 14:08:00', 'scroll',   'S004', 700),
+(27, 204, '2024-03-01 14:10:00', 'click',    'S004', NULL),
+(28, 204, '2024-03-01 14:12:00', 'app_close','S004', NULL);
+
+
+/*Q39:Write a solution to transform the text in the content_text column by applying the following rules:
+
+Convert the first letter of each word to uppercase and the remaining letters to lowercase
+Special handling for words containing special characters:
+For words connected with a hyphen -, both parts should be capitalized (e.g., top-rated → Top-Rated)
+All other formatting and spacing should remain unchanged
+*/
+
+CREATE TABLE user_content39 (
+    content_id INT PRIMARY KEY,
+    content_text VARCHAR(255)
+);
+
+INSERT INTO user_content39 VALUES
+(1, 'hello world of SQL'),
+(2, 'the QUICK-brown fox'),
+(3, 'modern-day DATA science'),
+(4, 'web-based FRONT-end development');
+
+
+
+
+/*Q40:Write a solution to Find Churn Risk Customers - users who show warning signs before churning. A user is considered churn risk customer if they meet ALL the following criteria:
+
+Currently have an active subscription (their last event is not cancel).
+Have performed at least one downgrade in their subscription history.
+Their current plan revenue is less than 50% of their historical maximum plan revenue.
+Have been a subscriber for at least 60 days.*/
+
+CREATE TABLE subscription_events40 (
+    event_id INT PRIMARY KEY,
+    user_id INT,
+    event_date DATE,
+    event_type VARCHAR(20),
+    plan_name VARCHAR(20),
+    monthly_amount DECIMAL(6,2)
+);
+
+INSERT INTO subscription_events40 VALUES
+(1, 501, '2024-01-01', 'start',     'premium', 29.99),
+(2, 501, '2024-02-15', 'downgrade', 'standard', 19.99),
+(3, 501, '2024-03-20', 'downgrade', 'basic',     9.99),
+
+(4, 502, '2024-01-05', 'start',     'standard', 19.99),
+(5, 502, '2024-02-10', 'upgrade',   'premium',  29.99),
+(6, 502, '2024-03-15', 'downgrade', 'basic',     9.99),
+
+(7, 503, '2024-01-10', 'start',     'basic',     9.99),
+(8, 503, '2024-02-20', 'upgrade',   'standard', 19.99),
+(9, 503, '2024-03-25', 'upgrade',   'premium',  29.99),
+
+(10, 504, '2024-01-15', 'start',     'premium', 29.99),
+(11, 504, '2024-03-01', 'downgrade', 'standard',19.99),
+(12, 504, '2024-03-30', 'cancel',    NULL,        0.00),
+
+(13, 505, '2024-02-01', 'start',     'basic',     9.99),
+(14, 505, '2024-02-28', 'upgrade',   'standard', 19.99),
+
+(15, 506, '2024-01-20', 'start',     'premium', 29.99),
+(16, 506, '2024-03-10', 'downgrade', 'basic',     9.99); 
 
 
