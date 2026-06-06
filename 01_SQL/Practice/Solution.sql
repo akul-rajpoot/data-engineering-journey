@@ -846,3 +846,41 @@ AND downgrade_flag = 1
 AND monthly_amount < max_revenue * 0.5
 AND DATEDIFF(event_date, first_event_date)>=60
 order by days_as_subscriber desc,user_id;
+
+
+/* Q41:
+Write a solution to analyze the organizational hierarchy and answer the following:
+Hierarchy Levels: For each employee, determine their level in the organization 
+(CEO is level 1, employees reporting directly to the CEO are level 2, and so on).
+Team Size: For each employee who is a manager, count the total number of employees under them 
+(direct and indirect reports).
+Salary Budget: For each manager, calculate the total salary budget they control 
+(sum of salaries of all employees under them, including indirect reports, plus their own salary).
+*/
+with recursive 
+cte as(
+select employee_id,employee_name,manager_id,1 as level
+from Employees41
+where manager_id is null
+union all
+select e.employee_id,e.employee_name,e.manager_id,c.level+1  
+from Employees41 e join cte c on e.manager_id=c.employee_id
+),
+
+hierarchy as( select employee_id as manager_id,employee_id,salary
+from Employees41
+union all
+select h.manager_id,e.employee_id,e.salary from hierarchy h
+join Employees41 e on e.manager_id = h.employee_id ),
+emp_count_amt as (
+select manager_id,count(*) - 1 as team_size,sum(salary) as budget from hierarchy
+group by manager_id)
+
+
+select c.employee_id,c.employee_name,c.level,ec.team_size,ec.budget
+from cte c
+left join emp_count_amt ec on c.employee_id = ec.manager_id
+order by c.level,ec.budget desc,c.employee_name;
+
+
+
