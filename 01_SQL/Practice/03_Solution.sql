@@ -883,4 +883,13 @@ left join emp_count_amt ec on c.employee_id = ec.manager_id
 order by c.level,ec.budget desc,c.employee_name;
 
 
+#Q42: Find the total cost of each customer's orders. Output customer's id, first name, and the total order cost.
+# Order records by customer's first name alphabetically.
+
+select c.id,c.first_name,sum(o.total_order_cost)  as total_cost from orders42 o
+join customers42 c  on c.id=o.cust_id
+group by c.id,c.first_name
+order by c.first_name;
+
+
 

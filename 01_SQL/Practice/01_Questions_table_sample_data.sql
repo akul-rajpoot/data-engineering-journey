@@ -1486,4 +1486,73 @@ INSERT INTO subscription_events40 VALUES
 (15, 506, '2024-01-20', 'start',     'premium', 29.99),
 (16, 506, '2024-03-10', 'downgrade', 'basic',     9.99); 
 
+/* Q41:
+Write a solution to analyze the organizational hierarchy and answer the following:
+Hierarchy Levels: For each employee, determine their level in the organization 
+(CEO is level 1, employees reporting directly to the CEO are level 2, and so on).
+Team Size: For each employee who is a manager, count the total number of employees under them 
+(direct and indirect reports).
+Salary Budget: For each manager, calculate the total salary budget they control 
+(sum of salaries of all employees under them, including indirect reports, plus their own salary).
+*/
 
+CREATE TABLE Employees41 (
+    employee_id INT PRIMARY KEY,
+    employee_name VARCHAR(50),
+    manager_id INT,
+    salary INT,
+    department VARCHAR(50)
+);
+
+INSERT INTO Employees41 VALUES
+(1, 'Alice', NULL, 12000, 'Executive'),
+(2, 'Bob', 1, 10000, 'Sales'),
+(3, 'Charlie', 1, 10000, 'Engineering'),
+(4, 'David', 2, 7500, 'Sales'),
+(5, 'Eva', 2, 7500, 'Sales'),
+(6, 'Frank', 3, 9000, 'Engineering'),
+(7, 'Grace', 3, 8500, 'Engineering'),
+(8, 'Hank', 4, 6000, 'Sales'),
+(9, 'Ivy', 6, 7000, 'Engineering'),
+(10, 'Judy', 6, 7000, 'Engineering');
+
+
+#Q42: Find the total cost of each customer's orders. Output customer's id, first name, and the total order cost.
+# Order records by customer's first name alphabetically.
+
+CREATE TABLE customers42 (
+    id BIGINT PRIMARY KEY,
+    first_name VARCHAR(50),
+    last_name VARCHAR(50),
+    city VARCHAR(50),
+    address VARCHAR(100),
+    phone_number VARCHAR(20)
+);
+
+CREATE TABLE orders42 (
+    id BIGINT PRIMARY KEY,
+    cust_id BIGINT,
+    order_date DATE,
+    order_details VARCHAR(100),
+    total_order_cost BIGINT,
+    FOREIGN KEY (cust_id) REFERENCES customers(id)
+);
+
+INSERT INTO customers42 VALUES
+(1, 'John', 'Smith', 'New York', '123 Main St', '555-1001'),
+(2, 'Alice', 'Johnson', 'Los Angeles', '456 Oak Ave', '555-1002'),
+(3, 'Bob', 'Williams', 'Chicago', '789 Pine Rd', '555-1003'),
+(4, 'Emma', 'Brown', 'Houston', '321 Maple Dr', '555-1004'),
+(5, 'Michael', 'Davis', 'Phoenix', '654 Cedar Ln', '555-1005');
+
+INSERT INTO orders42 VALUES
+(101, 1, '2024-01-05', 'Laptop', 1200),
+(102, 1, '2024-01-12', 'Mouse', 50),
+(103, 2, '2024-01-10', 'Mobile Phone', 800),
+(104, 2, '2024-01-18', 'Headphones', 150),
+(105, 3, '2024-01-15', 'Monitor', 300),
+(106, 3, '2024-02-01', 'Keyboard', 100),
+(107, 4, '2024-02-05', 'Tablet', 600),
+(108, 4, '2024-02-10', 'Charger', 40),
+(109, 5, '2024-02-12', 'Smart Watch', 250),
+(110, 5, '2024-02-20', 'Power Bank', 80);

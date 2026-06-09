@@ -284,3 +284,17 @@ Have performed at least one downgrade in their subscription history.
 Their current plan revenue is less than 50% of their historical maximum plan revenue.
 Have been a subscriber for at least 60 days.*/
 
+
+/* Q41:
+Write a solution to analyze the organizational hierarchy and answer the following:
+Hierarchy Levels: For each employee, determine their level in the organization 
+(CEO is level 1, employees reporting directly to the CEO are level 2, and so on).
+Team Size: For each employee who is a manager, count the total number of employees under them 
+(direct and indirect reports).
+Salary Budget: For each manager, calculate the total salary budget they control 
+(sum of salaries of all employees under them, including indirect reports, plus their own salary).
+*/
+
+#Q42: Find the total cost of each customer's orders. Output customer's id, first name, and the total order cost.
+# Order records by customer's first name alphabetically.
+
