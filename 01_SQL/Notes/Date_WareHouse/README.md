@@ -497,4 +497,532 @@ Answer: SCD Type 1
 ```text
 To maintain multiple historical versions
 of the same Natural Key.
+
+---
+
+# ETL vs ELT
+
+## ETL
+
+ETL stands for:
+
+```text
+Extract
+Transform
+Load
+```
+
+### Flow
+
+```text
+Source Systems
+      ↓
+   Extract
+      ↓
+  Transform
+      ↓
+Data Warehouse
+```
+
+### Characteristics
+
+- Data transformed before loading
+- Raw data usually not retained in warehouse
+- Traditional data warehouse approach
+- Common in legacy systems
+
+---
+
+## ELT
+
+ELT stands for:
+
+```text
+Extract
+Load
+Transform
+```
+
+### Flow
+
+```text
+Source Systems
+      ↓
+   Extract
+      ↓
+     Load
+      ↓
+Data Warehouse
+      ↓
+  Transform
+```
+
+### Characteristics
+
+- Raw data loaded first
+- Transformations performed inside warehouse
+- More flexible
+- Common in modern cloud platforms
+
+---
+
+## ETL vs ELT
+
+| Feature | ETL | ELT |
+|----------|-----|-----|
+| Transform Happens | Before Load | After Load |
+| Raw Data Stored | Usually No | Usually Yes |
+| Flexibility | Less | More |
+| Modern Cloud DW | Less Common | Very Common |
+| Reprocessing Historical Data | Difficult | Easier |
+
+---
+
+## Common Tools
+
+### ETL Tools
+
+- Informatica
+- SSIS
+- Talend
+- Pentaho
+
+### ELT Platforms
+
+- Snowflake
+- BigQuery
+- Databricks
+- dbt
+
+---
+
+# OLTP vs OLAP
+
+## OLTP (Online Transaction Processing)
+
+Used for day-to-day business transactions.
+
+### Examples
+
+- ATM Withdrawals
+- Swiggy Order Placement
+- Amazon Checkout
+- Banking Transactions
+
+### Characteristics
+
+- Frequent Inserts/Updates
+- Current Operational Data
+- Fast Response Time
+- Highly Normalized
+
+---
+
+## OLAP (Online Analytical Processing)
+
+Used for reporting and business analysis.
+
+### Examples
+
+- Revenue Reports
+- Executive Dashboards
+- Sales Analysis
+- Trend Analysis
+
+### Characteristics
+
+- Historical Data
+- Complex Queries
+- Aggregations and Reporting
+- Often Uses Star/Snowflake Schema
+
+---
+
+## OLTP vs OLAP
+
+| Feature | OLTP | OLAP |
+|----------|------|------|
+| Purpose | Run Business Operations | Analyze Business Data |
+| Data | Current | Historical |
+| Queries | Simple | Complex |
+| Users | Applications & Customers | Analysts & Executives |
+| Design | Normalized | Star/Snowflake |
+
+---
+
+# Data Warehouse vs Data Mart
+
+## Data Warehouse
+
+A centralized repository containing data for the entire organization.
+
+### Examples
+
+- Sales
+- Finance
+- HR
+- Marketing
+- Operations
+
+### Characteristics
+
+- Enterprise-wide
+- Large Volume of Data
+- Multiple Data Sources
+- Supports Company-wide Analytics
+
+---
+
+## Data Mart
+
+A subset of a Data Warehouse built for a specific department.
+
+### Examples
+
+- Finance Data Mart
+- HR Data Mart
+- Marketing Data Mart
+
+### Characteristics
+
+- Department-specific
+- Smaller in Size
+- Focused Business Area
+- Faster Access for Team Needs
+
+---
+
+## Data Warehouse vs Data Mart
+
+| Feature | Data Warehouse | Data Mart |
+|----------|---------------|-----------|
+| Scope | Entire Organization | Single Department |
+| Size | Large | Smaller |
+| Users | Company-wide | Specific Team |
+| Data | Multiple Business Areas | Specific Business Area |
+
+---
+
+# Quick Interview Revision
+
+### ETL
+
+```text
+Transform Before Load
+```
+
+### ELT
+
+```text
+Load Before Transform
+```
+
+### OLTP
+
+```text
+Run the Business
+```
+
+### OLAP
+
+```text
+Analyze the Business
+```
+
+### Data Warehouse
+
+```text
+Whole Company Data
+```
+
+### Data Mart
+
+```text
+Single Department Data
+
+---
+
+# Fact Table Types
+
+## Transaction Fact Table
+
+### Definition
+
+One row represents one business transaction or event.
+
+### Examples
+
+- Sales Transaction
+- UPI Payment
+- Credit Card Swipe
+- Stock Trade
+- ATM Withdrawal
+
+### Example
+
+| Sale_ID | Product_ID | Qty | Amount |
+|----------|------------|-----|--------|
+| 1001 | 201 | 2 | 5000 |
+| 1002 | 301 | 1 | 8000 |
+
+### Memory Trick
+
+```text
+What Happened?
+=
+Transaction Fact
+```
+
+---
+
+## Snapshot Fact Table
+
+### Definition
+
+Stores the state of a business process at a specific point in time.
+
+### Examples
+
+- Daily Inventory
+- Daily Account Balance
+- Daily Portfolio Value
+- Daily Active Customers
+
+### Example
+
+| Date | Product_ID | Inventory |
+|------|------------|------------|
+| 01-Jan | 101 | 500 |
+| 02-Jan | 101 | 450 |
+| 03-Jan | 101 | 600 |
+
+### Memory Trick
+
+```text
+What Did Things Look Like?
+=
+Snapshot Fact
+```
+
+---
+
+## Accumulating Snapshot Fact Table
+
+### Definition
+
+Tracks the lifecycle of a process from start to completion.
+
+### Examples
+
+- Order Fulfillment
+- Loan Approval Process
+- Insurance Claim Process
+- Recruitment Pipeline
+
+### Example
+
+| Order_ID | Order_Date | Packed_Date | Shipped_Date | Delivered_Date |
+|-----------|------------|-------------|--------------|----------------|
+| 1001 | 01-Jan | 02-Jan | 03-Jan | 05-Jan |
+
+### Memory Trick
+
+```text
+How Far Has The Process Reached?
+=
+Accumulating Snapshot
+```
+
+---
+
+# Fact Table Types Summary
+
+| Fact Type | Purpose |
+|------------|----------|
+| Transaction Fact | Records Business Events |
+| Snapshot Fact | Captures State at a Point in Time |
+| Accumulating Snapshot | Tracks Process Lifecycle |
+
+---
+
+# Dimension Types
+
+## Conformed Dimension
+
+### Definition
+
+A dimension shared across multiple fact tables.
+
+### Example
+
+```text
+Dim_Date
+
+Fact_Sales
+Fact_Inventory
+Fact_Orders
+```
+
+### Common Examples
+
+- Dim_Date
+- Dim_Customer
+- Dim_Product
+
+---
+
+## Junk Dimension
+
+### Definition
+
+Combines multiple low-cardinality flags into a single dimension.
+
+### Example
+
+```text
+Is_Active
+Is_Premium
+Is_Mobile_User
+```
+
+Combined into:
+
+```text
+Dim_Junk
+```
+
+---
+
+## Degenerate Dimension
+
+### Definition
+
+A business identifier stored directly inside the Fact Table.
+
+### Examples
+
+- Order_ID
+- Invoice_Number
+- Transaction_ID
+- Ticket_Number
+
+### Example
+
+```text
+Fact_Sales
+
+Order_ID
+Product_ID
+Amount
+```
+
+Order_ID is a Degenerate Dimension.
+
+---
+
+# Dimension Types Summary
+
+| Dimension Type | Description |
+|----------------|-------------|
+| Conformed | Shared Across Multiple Fact Tables |
+| Junk | Combines Multiple Flags |
+| Degenerate | Business Identifier Stored In Fact |
+
+---
+
+# Kimball vs Inmon
+
+## Kimball Approach
+
+### Definition
+
+Bottom-Up Data Warehouse Architecture.
+
+### Flow
+
+```text
+Source Systems
+      ↓
+Data Marts
+      ↓
+Enterprise Data Warehouse
+```
+
+### Characteristics
+
+- Bottom-Up
+- Faster Implementation
+- Lower Initial Cost
+- Business-Oriented
+- Uses Star Schema
+
+---
+
+## Inmon Approach
+
+### Definition
+
+Top-Down Data Warehouse Architecture.
+
+### Flow
+
+```text
+Source Systems
+      ↓
+Enterprise Data Warehouse
+      ↓
+Data Marts
+```
+
+### Characteristics
+
+- Top-Down
+- Enterprise-Oriented
+- Higher Initial Cost
+- Longer Implementation Time
+- Centralized Data Model
+
+---
+
+# Kimball vs Inmon Comparison
+
+| Feature | Kimball | Inmon |
+|----------|----------|--------|
+| Approach | Bottom-Up | Top-Down |
+| Start With | Data Marts | Enterprise DW |
+| Speed | Faster | Slower |
+| Cost | Lower | Higher |
+| Modeling | Dimensional | Normalized |
+| Business Value | Quick Wins | Long-Term Integration |
+
+---
+
+# Quick Interview Revision
+
+```text
+Transaction Fact
+= What Happened?
+
+Snapshot Fact
+= What Did Things Look Like?
+
+Accumulating Snapshot
+= Process Lifecycle
+
+Conformed Dimension
+= Shared Across Facts
+
+Junk Dimension
+= Multiple Flags Combined
+
+Degenerate Dimension
+= Identifier In Fact
+
+Kimball
+= Bottom-Up
+
+Inmon
+= Top-Down
+```
+```
 ```
