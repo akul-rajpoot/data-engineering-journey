@@ -891,5 +891,10 @@ join customers42 c  on c.id=o.cust_id
 group by c.id,c.first_name
 order by c.first_name;
 
+#Q43: Compare each employee's salary with the average salary of the corresponding department.
+#Output the department, first name, and salary of employees along with the average salary of that department.
 
+select department,first_name,salary,
+avg(salary) over(partition by department) as avrg
+from employee43;
 

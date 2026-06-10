@@ -1556,3 +1556,57 @@ INSERT INTO orders42 VALUES
 (108, 4, '2024-02-10', 'Charger', 40),
 (109, 5, '2024-02-12', 'Smart Watch', 250),
 (110, 5, '2024-02-20', 'Power Bank', 80);
+
+
+#Q43: Compare each employee's salary with the average salary of the corresponding department.
+#Output the department, first name, and salary of employees along with the average salary of that department.
+
+CREATE TABLE employee43 (
+    id BIGINT PRIMARY KEY,
+    first_name VARCHAR(50),
+    last_name VARCHAR(50),
+    age BIGINT,
+    sex VARCHAR(10),
+    employee_title VARCHAR(100),
+    department VARCHAR(50),
+    salary BIGINT,
+    bonus BIGINT,
+    target BIGINT,
+    manager_id BIGINT,
+    email VARCHAR(100),
+    city VARCHAR(50),
+    address VARCHAR(200)
+);
+
+INSERT INTO employee43 VALUES
+(1,'John','Smith',45,'M','CEO','Executive',250000,50000,1000,NULL,'john.smith@company.com','New York','123 Main St'),
+
+(2,'Alice','Johnson',40,'F','Sales Director','Sales',180000,30000,800,1,'alice.johnson@company.com','New York','234 Park Ave'),
+
+(3,'Bob','Williams',38,'M','Engineering Director','Engineering',190000,35000,700,1,'bob.williams@company.com','San Francisco','345 Market St'),
+
+(4,'Carol','Brown',35,'F','HR Director','HR',160000,25000,500,1,'carol.brown@company.com','Chicago','456 Lake Shore Dr'),
+
+(5,'David','Miller',32,'M','Sales Manager','Sales',120000,20000,600,2,'david.miller@company.com','New York','567 Broadway'),
+
+(6,'Emma','Davis',30,'F','Sales Executive','Sales',90000,15000,400,5,'emma.davis@company.com','Boston','678 Beacon St'),
+
+(7,'Frank','Wilson',29,'M','Sales Executive','Sales',85000,12000,350,5,'frank.wilson@company.com','Boston','789 Boylston St'),
+
+(8,'Grace','Taylor',31,'F','Engineering Manager','Engineering',130000,22000,550,3,'grace.taylor@company.com','San Francisco','890 Mission St'),
+
+(9,'Henry','Anderson',28,'M','Software Engineer','Engineering',105000,10000,300,8,'henry.anderson@company.com','San Francisco','901 Howard St'),
+
+(10,'Ivy','Thomas',27,'F','Software Engineer','Engineering',100000,9000,280,8,'ivy.thomas@company.com','San Francisco','912 Folsom St'),
+
+(11,'Jack','Moore',26,'M','QA Engineer','Engineering',85000,7000,250,8,'jack.moore@company.com','San Jose','923 First St'),
+
+(12,'Karen','Martin',29,'F','HR Specialist','HR',80000,8000,200,4,'karen.martin@company.com','Chicago','934 Michigan Ave'),
+
+(13,'Leo','Jackson',33,'M','Finance Manager','Finance',125000,18000,450,1,'leo.jackson@company.com','New York','945 Wall St'),
+
+(14,'Mia','White',30,'F','Financial Analyst','Finance',90000,10000,300,13,'mia.white@company.com','New York','956 Madison Ave'),
+
+(15,'Noah','Harris',25,'M','Data Analyst','Engineering',95000,8500,270,8,'noah.harris@company.com','San Francisco','967 Castro St');
+
+

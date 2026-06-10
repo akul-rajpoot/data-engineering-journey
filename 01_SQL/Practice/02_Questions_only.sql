@@ -298,3 +298,7 @@ Salary Budget: For each manager, calculate the total salary budget they control
 #Q42: Find the total cost of each customer's orders. Output customer's id, first name, and the total order cost.
 # Order records by customer's first name alphabetically.
 
+
+#Q43: Compare each employee's salary with the average salary of the corresponding department.
+#Output the department, first name, and salary of employees along with the average salary of that department.
+
