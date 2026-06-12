@@ -1610,3 +1610,64 @@ INSERT INTO employee43 VALUES
 (15,'Noah','Harris',25,'M','Data Analyst','Engineering',95000,8500,270,8,'noah.harris@company.com','San Francisco','967 Castro St');
 
 
+
+#Q44:What is the total sales revenue of Samantha and Lisa?
+CREATE TABLE sales_performance44 (
+    id BIGINT PRIMARY KEY,
+    salesperson VARCHAR(100),
+    sales_revenue BIGINT,
+    widget_sales BIGINT
+);
+
+INSERT INTO sales_performance44 VALUES
+(1, 'Alice Johnson', 125000, 450),
+(2, 'Bob Smith', 98000, 380),
+(3, 'Carol Davis', 145000, 520),
+(4, 'David Wilson', 87000, 340),
+(5, 'Emma Brown', 112000, 410),
+(6, 'Frank Miller', 156000, 580),
+(7, 'Grace Taylor', 134000, 495),
+(8, 'Henry Moore', 91000, 355),
+(9, 'Ivy Anderson', 168000, 620),
+(10, 'Jack Thomas', 103000, 390);
+
+
+
+#Q45:We have a table with employees and their salaries; however, some of the records are old and contain 
+#outdated salary information. Since there is no timestamp, assume salary is non-decreasing over time. 
+#You can consider the current salary for an employee is the largest salary value among their records. If multiple records share the same maximum salary, return any one of them. Output their id, first name, last name, department ID, and current salary. Order your list by employee ID in ascending order.
+CREATE TABLE ms_employee_salary45 (
+    id BIGINT,
+    first_name VARCHAR(50),
+    last_name VARCHAR(50),
+    department_id BIGINT,
+    salary BIGINT
+);
+
+INSERT INTO ms_employee_salary45 VALUES
+(1, 'John', 'Smith', 101, 50000),
+(1, 'John', 'Smith', 101, 55000),
+(1, 'John', 'Smith', 101, 60000),
+
+(2, 'Alice', 'Johnson', 102, 45000),
+(2, 'Alice', 'Johnson', 102, 50000),
+
+(3, 'Bob', 'Williams', 103, 70000),
+(3, 'Bob', 'Williams', 103, 70000),
+
+(4, 'Emma', 'Brown', 101, 40000),
+(4, 'Emma', 'Brown', 101, 45000),
+(4, 'Emma', 'Brown', 101, 47000),
+
+(5, 'Michael', 'Davis', 102, 55000),
+
+(6, 'Sophia', 'Miller', 103, 65000),
+(6, 'Sophia', 'Miller', 103, 68000),
+
+(7, 'James', 'Wilson', 104, 80000),
+(7, 'James', 'Wilson', 104, 85000),
+(7, 'James', 'Wilson', 104, 90000),
+
+(8, 'Olivia', 'Moore', 104, 75000),
+(8, 'Olivia', 'Moore', 104, 78000);
+
