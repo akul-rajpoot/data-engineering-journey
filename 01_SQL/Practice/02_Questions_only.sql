@@ -311,3 +311,5 @@ Salary Budget: For each manager, calculate the total salary budget they control
 #outdated salary information. Since there is no timestamp, assume salary is non-decreasing over time. 
 #You can consider the current salary for an employee is the largest salary value among their records. If multiple records share the same maximum salary, return any one of them. Output their id, first name, last name, department ID, and current salary. Order your list by employee ID in ascending order.
 
+
+#Q46:Find the hour with the highest gasoline cost. Assume there's only 1 hour with the highest 

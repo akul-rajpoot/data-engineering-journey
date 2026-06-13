@@ -1671,3 +1671,24 @@ INSERT INTO ms_employee_salary45 VALUES
 (8, 'Olivia', 'Moore', 104, 75000),
 (8, 'Olivia', 'Moore', 104, 78000);
 
+#Q46:Find the hour with the highest gasoline cost. Assume there's only 1 hour with the highest 
+
+CREATE TABLE lyft_rides46 (
+    `index` BIGINT,
+    hour BIGINT,
+    travel_distance FLOAT,
+    gasoline_cost FLOAT,
+    weather VARCHAR(50)
+);
+
+INSERT INTO lyft_rides46 VALUES
+(1, 0, 3.5, 4.20, 'Clear'),
+(2, 1, 2.8, 3.75, 'Clear'),
+(3, 2, 4.1, 5.10, 'Rain'),
+(4, 3, 5.5, 6.25, 'Rain'),
+(5, 4, 3.2, 4.80, 'Cloudy'),
+(6, 5, 6.0, 7.10, 'Cloudy'),
+(7, 6, 7.5, 8.25, 'Clear'),
+(8, 7, 8.0, 9.50, 'Clear'),
+(9, 8, 10.5, 12.75, 'Sunny'),
+(10, 9, 9.0, 10.50, 'Sunny');

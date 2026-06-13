@@ -341,3 +341,436 @@ Data Warehouse = Processed Data
 Data Lake = Raw + Processed Data
 Data Lakehouse = Processing Directly on Data Lake
 ```
+
+
+## Section 2 - Spark Fundamentals
+
+### What is Apache Spark?
+
+Apache Spark is a distributed data processing framework used for processing large datasets across multiple machines.
+
+### What is PySpark?
+
+PySpark is the Python API for Apache Spark that allows large-scale data processing using Python.
+
+### Why PySpark Instead of Pandas?
+
+#### Pandas
+- Runs on a single machine.
+- Data is processed in local memory.
+- Suitable for small and medium datasets.
+
+#### PySpark
+- Supports distributed processing.
+- Can process very large datasets.
+- Suitable for big data workloads.
+
+---
+
+### SparkSession
+
+SparkSession is the entry point to PySpark.
+
+Uses:
+- Create DataFrames.
+- Read data from files.
+- Execute Spark SQL.
+- Interact with Spark cluster.
+
+Example:
+
+```python
+from pyspark.sql import SparkSession
+
+spark = SparkSession.builder \
+    .appName("MyApp") \
+    .getOrCreate()
+```
+
+---
+
+### DataFrame
+
+A DataFrame is a distributed collection of data organized into rows and columns.
+
+It is similar to a table in a relational database.
+
+Example:
+
+```python
+data = [
+    (1, "Akul", 100000),
+    (2, "Rahul", 80000)
+]
+
+columns = ["emp_id", "emp_name", "salary"]
+
+df = spark.createDataFrame(data, columns)
+```
+
+---
+
+### Common DataFrame Actions
+
+#### show()
+Displays DataFrame records.
+
+```python
+df.show()
+```
+
+#### printSchema()
+Displays column names and data types.
+
+```python
+df.printSchema()
+```
+
+#### count()
+Returns the total number of rows.
+
+```python
+df.count()
+```
+
+---
+
+## Section 3 - Transformations and Actions
+
+### Transformations
+
+Transformations create a new DataFrame.
+
+Examples:
+
+```python
+df.select()
+df.filter()
+df.withColumn()
+df.drop()
+df.distinct()
+df.orderBy()
+```
+
+Important:
+
+- Transformations are lazy.
+- They do not execute immediately.
+- Spark creates an execution plan.
+
+---
+
+### Actions
+
+Actions trigger execution.
+
+Examples:
+
+```python
+df.show()
+df.count()
+df.collect()
+df.first()
+```
+
+---
+
+### Lazy Evaluation
+
+Spark executes transformations only when an action is called.
+
+Example:
+
+```python
+df.filter(col("salary") > 90000)
+```
+
+No execution happens until:
+
+```python
+df.show()
+```
+
+---
+
+### select()
+
+Select specific columns.
+
+```python
+df.select("emp_name")
+```
+
+---
+
+### filter()
+
+Filter rows based on a condition.
+
+```python
+df.filter(col("salary") > 90000)
+```
+
+---
+
+### withColumn()
+
+Add or modify a column.
+
+```python
+df.withColumn("bonus", col("salary") * 0.10)
+```
+
+---
+
+### drop()
+
+Remove one or more columns.
+
+```python
+df.drop("salary")
+```
+
+---
+
+### distinct()
+
+Remove duplicate rows.
+
+```python
+df.distinct()
+```
+
+---
+
+### orderBy()
+
+Sort data.
+
+```python
+df.orderBy("salary")
+```
+
+Descending:
+
+```python
+df.orderBy(col("salary").desc())
+```
+
+---
+
+## Section 4 - Aggregations
+
+### groupBy()
+
+Groups records for aggregation.
+
+```python
+df.groupBy("department")
+```
+
+---
+
+### Aggregate Functions
+
+```python
+sum()
+avg()
+max()
+count()
+```
+
+Example:
+
+```python
+df.groupBy("department") \
+  .agg(
+      sum("salary").alias("total_salary"),
+      avg("salary").alias("avg_salary"),
+      max("salary").alias("max_salary")
+  )
+```
+
+---
+
+### count(*) vs count(column)
+
+#### count(*)
+Counts all rows including rows containing NULL values.
+
+#### count(column)
+Counts only non-null values.
+
+Example:
+
+```text
+100000
+NULL
+80000
+```
+
+```text
+count(*) = 3
+count(salary) = 2
+```
+
+---
+
+## Section 5 - Joins
+
+### Inner Join
+
+Returns only matching records.
+
+```python
+df1.join(df2, "dept_id", "inner")
+```
+
+---
+
+### Left Join
+
+Returns all records from the left DataFrame and matching records from the right DataFrame.
+
+```python
+df1.join(df2, "dept_id", "left")
+```
+
+---
+
+### SQL vs PySpark
+
+SQL:
+
+```sql
+SELECT *
+FROM employee e
+INNER JOIN department d
+ON e.dept_id = d.dept_id;
+```
+
+PySpark:
+
+```python
+emp_df.join(dept_df, "dept_id", "inner")
+```
+
+---
+
+## Section 6 - Window Functions
+
+### Window Specification
+
+```python
+from pyspark.sql.window import Window
+
+window_spec = Window.partitionBy("dept") \
+                    .orderBy(col("salary").desc())
+```
+
+---
+
+### row_number()
+
+Assigns unique sequential numbers.
+
+Example:
+
+```text
+1
+2
+3
+4
+```
+
+---
+
+### rank()
+
+Assigns same rank for ties and skips ranks.
+
+Example:
+
+```text
+1
+2
+2
+4
+```
+
+---
+
+### dense_rank()
+
+Assigns same rank for ties without gaps.
+
+Example:
+
+```text
+1
+2
+2
+3
+```
+
+---
+
+### lag()
+
+Returns value from previous row.
+
+```python
+lag("sales", 1)
+```
+
+Meaning:
+
+```text
+Look 1 row backward.
+```
+
+---
+
+### lead()
+
+Returns value from next row.
+
+```python
+lead("sales", 1)
+```
+
+Meaning:
+
+```text
+Look 1 row forward.
+```
+
+---
+
+## Quick Revision - Section 2 to 6
+
+```text
+SparkSession = Entry Point
+
+DataFrame = Table in PySpark
+
+show(), count() = Actions
+
+select(), filter(), withColumn(), drop(), distinct(), orderBy() = Transformations
+
+Transformations = Lazy
+Actions = Execute
+
+count(*) = All Rows
+count(column) = Non-Null Values
+
+Inner Join = Matching Records
+Left Join = All Left Records
+
+row_number = 1 2 3 4
+rank = 1 2 2 4
+dense_rank = 1 2 2 3
+
+lag = Previous Row
+lead = Next Row
+```
