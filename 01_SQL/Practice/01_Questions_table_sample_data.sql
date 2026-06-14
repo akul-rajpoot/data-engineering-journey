@@ -1692,3 +1692,7 @@ INSERT INTO lyft_rides46 VALUES
 (8, 7, 8.0, 9.50, 'Clear'),
 (9, 8, 10.5, 12.75, 'Sunny'),
 (10, 9, 9.0, 10.50, 'Sunny');
+
+
+#Q47: Compare each employee's salary with the average salary of the corresponding department.
+#Output the department, first name, and salary of employees along with the average salary of that department.

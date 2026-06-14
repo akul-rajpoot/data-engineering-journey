@@ -771,6 +771,193 @@ row_number = 1 2 3 4
 rank = 1 2 2 4
 dense_rank = 1 2 2 3
 
+
 lag = Previous Row
 lead = Next Row
+```
+
+---
+
+## Section 7 - Practical Window Function Scenarios
+
+### Finding Top Employee Per Department
+
+Business Requirement:
+- Find the highest-paid employee in each department.
+
+```python
+window_spec = Window.partitionBy("Dept") \
+                    .orderBy(col("Salary").desc())
+```
+
+```python
+df = df.withColumn(
+    "rn",
+    row_number().over(window_spec)
+)
+
+result = df.filter(col("rn") == 1)
+```
+
+Key Learning:
+- Use `partitionBy()` whenever ranking must restart for each group.
+- Examples: Department, Customer, Product, Region.
+
+---
+
+### lag(column, n)
+
+Returns value from `n` rows before the current row.
+
+```python
+lag("Sale", 1)
+```
+
+Meaning:
+
+```text
+Look 1 row backward.
+```
+
+Example:
+
+```text
+Month  Sale  Prev_Sale
+Jan    100   NULL
+Feb    120   100
+Mar    150   120
+Apr    130   150
+May    170   130
+```
+
+---
+
+### lead(column, n)
+
+Returns value from `n` rows after the current row.
+
+```python
+lead("Sale", 1)
+```
+
+Meaning:
+
+```text
+Look 1 row forward.
+```
+
+Example:
+
+```text
+Month  Sale  Next_Sale
+Jan    100   120
+Feb    120   150
+Mar    150   130
+Apr    130   170
+May    170   NULL
+```
+
+---
+
+### lag(column, 2)
+
+```text
+Month  Sale  Lag_2
+Jan    100   NULL
+Feb    120   NULL
+Mar    150   100
+Apr    130   120
+May    170   150
+```
+
+---
+
+### lead(column, 2)
+
+```text
+Month  Sale  Lead_2
+Jan    100   150
+Feb    120   130
+Mar    150   170
+Apr    130   NULL
+May    170   NULL
+```
+
+---
+
+### Month-over-Month Difference
+
+Business Requirement:
+- Calculate difference from previous month's sales.
+
+```python
+df = df.withColumn(
+    "diff",
+    col("Sale") - col("prev_val")
+)
+```
+
+Example:
+
+```text
+Month  Sale  Prev_Sale  Diff
+Jan    100   NULL       NULL
+Feb    120   100        20
+Mar    150   120        30
+Apr    130   150       -20
+May    170   130        40
+```
+
+---
+
+### Month-over-Month Growth Percentage
+
+Formula:
+
+```text
+((Current Sale - Previous Sale) / Previous Sale) * 100
+```
+
+PySpark:
+
+```python
+df = df.withColumn(
+    "Growth_Percentage",
+    ((col("Sale") - col("prev_val")) / col("prev_val")) * 100
+)
+```
+
+Example:
+
+```text
+Feb -> 20.00%
+Mar -> 25.00%
+Apr -> -13.33%
+May -> 30.77%
+```
+
+---
+
+## Interview Tips
+
+```text
+When you hear:
+- Per Customer
+- Per Department
+- Per Product
+- Per Region
+
+Think:
+Window.partitionBy(...)
+```
+
+```text
+row_number() -> Unique ranking
+rank() -> Same rank with gaps
+dense_rank() -> Same rank without gaps
+```
+
+```text
+lag() -> Look backward
+lead() -> Look forward
 ```

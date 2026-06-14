@@ -919,3 +919,16 @@ row_number() over (partition by id order by salary desc) as rn
 from ms_employee_salary45) s where rn=1;
 
 
+#Q46:Find the hour with the highest gasoline cost. Assume there's only 1 hour with the highest 
+select hour from lyft_rides46
+order by gasoline_cost desc
+limit 1;
+
+
+#Q47: Compare each employee's salary with the average salary of the corresponding department.
+#Output the department, first name, and salary of employees along with the average salary of that department.
+
+select department,first_name,salary,
+avg(salary) over(partition by department) as avg_salary from employee
+
+

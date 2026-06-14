@@ -313,3 +313,6 @@ Salary Budget: For each manager, calculate the total salary budget they control
 
 
 #Q46:Find the hour with the highest gasoline cost. Assume there's only 1 hour with the highest 
+
+#Q47: Compare each employee's salary with the average salary of the corresponding department.
+#Output the department, first name, and salary of employees along with the average salary of that department.
