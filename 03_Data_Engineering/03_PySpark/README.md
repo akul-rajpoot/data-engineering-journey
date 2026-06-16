@@ -1,5 +1,3 @@
-
-
 # PySpark
 
 ## Section 1 - Big Data Fundamentals
@@ -960,4 +958,391 @@ dense_rank() -> Same rank without gaps
 ```text
 lag() -> Look backward
 lead() -> Look forward
+```
+
+## Section 8 - DataFrame Immutability & Interview Notes
+
+### DataFrame Immutability
+
+A DataFrame is immutable.
+
+Meaning:
+- Existing DataFrame cannot be modified.
+- Every transformation creates a new DataFrame.
+
+Example:
+
+df2 = df1.filter(col("salary") > 100000)
+
+Result:
+df1 -> Original DataFrame
+df2 -> New Filtered DataFrame
+
+---
+
+### Reassigning a DataFrame
+
+df1 = df1.filter(col("salary") > 100000)
+
+Explanation:
+- Spark creates a new DataFrame.
+- The variable df1 now points to the new DataFrame.
+- The original DataFrame is not modified.
+
+---
+
+### Why Spark Uses Immutable DataFrames
+
+- Fault Tolerance
+- Parallel Processing
+- Lazy Evaluation
+- Catalyst Optimization
+- Safe Distributed Execution
+
+---
+
+### Transformation Execution Flow
+
+Incorrect:
+
+df.select("department") \
+  .filter(col("salary") > 50000)
+
+Reason:
+salary no longer exists after select().
+
+Correct:
+
+df.filter(col("salary") > 50000) \
+  .groupBy("department") \
+  .count() \
+  .orderBy(col("count").desc())
+
+---
+
+### Interview Notes
+
+header=True
+- Uses first row as column names.
+
+inferSchema=True
+- Automatically detects column data types.
+
+Without inferSchema:
+- All columns become StringType.
+
+Example:
+
+100
+20
+3
+
+Sorted as strings:
+
+100
+20
+3
+
+Not:
+
+3
+20
+100
+
+---
+
+### Quick Revision
+
+DataFrames are Immutable
+
+Transformations create new DataFrames
+
+Variables are reassigned, objects are not modified
+
+header=True -> First row is header
+
+inferSchema=True -> Detect data types
+
+Without inferSchema -> StringType for all columns
+
+Use explicit schema in production
+
+## Section 9 - Data Types, Null Handling & File Operations
+
+### Common Spark Data Types
+
+#### Numeric Types
+
+```python
+IntegerType()
+LongType()
+FloatType()
+DoubleType()
+DecimalType()
+```
+
+#### String Type
+
+```python
+StringType()
+```
+
+#### Date & Time Types
+
+```python
+DateType()
+TimestampType()
+```
+
+#### Boolean Type
+
+```python
+BooleanType()
+```
+
+---
+
+### Schema Inference
+
+#### header=True
+
+```text
+Uses the first row of the file as column names.
+```
+
+Example:
+
+```text
+emp_id,emp_name,salary
+1,Akul,100000
+```
+
+---
+
+#### inferSchema=True
+
+```text
+Automatically detects column data types.
+```
+
+Without inferSchema:
+
+```text
+All columns become StringType.
+```
+
+Example:
+
+```text
+emp_id -> string
+salary -> string
+```
+
+---
+
+### Explicit Schema Definition
+
+```python
+from pyspark.sql.types import *
+
+schema = StructType([
+    StructField("emp_id", IntegerType(), True),
+    StructField("salary", DoubleType(), True)
+])
+```
+
+Advantages:
+
+```text
+Faster than inferSchema
+Predictable
+Production Friendly
+Avoids Schema Inference Scan
+```
+
+---
+
+### Null Handling
+
+#### fillna()
+
+```python
+df.fillna(0)
+```
+
+Replaces NULL values.
+
+---
+
+#### coalesce()
+
+```python
+coalesce(col("salary"), lit(0))
+```
+
+Returns the first non-null value.
+
+---
+
+### CAST vs TRY_CAST
+
+#### CAST
+
+```sql
+CAST('ABC' AS INT)
+```
+
+Result:
+
+```text
+Error
+```
+
+---
+
+#### TRY_CAST
+
+```sql
+TRY_CAST('ABC' AS INT)
+```
+
+Result:
+
+```text
+NULL
+```
+
+Interview Point:
+
+```text
+TRY_CAST prevents ETL failures caused by bad data.
+```
+
+---
+
+## Read Operations
+
+### Read CSV
+
+```python
+df = spark.read.csv(
+    "employees.csv",
+    header=True,
+    inferSchema=True
+)
+```
+
+### Read JSON
+
+```python
+df = spark.read.json("employees.json")
+```
+
+### Read Parquet
+
+```python
+df = spark.read.parquet("employees.parquet")
+```
+
+### Read Table
+
+```python
+df = spark.read.table("employee")
+```
+
+Used for Hive Metastore, Unity Catalog, and Spark Catalog tables.
+
+---
+
+## Write Operations
+
+### Write CSV
+
+```python
+df.write.csv("output/")
+```
+
+### Write JSON
+
+```python
+df.write.json("output/")
+```
+
+### Write Parquet
+
+```python
+df.write.parquet("output/")
+```
+
+### Save as Table
+
+```python
+df.write.saveAsTable("employee")
+```
+
+---
+
+## CSV vs Parquet
+
+### CSV
+
+```text
+Row Based Storage
+Human Readable
+Larger File Size
+Slower Queries
+```
+
+### Parquet
+
+```text
+Columnar Storage
+Compressed
+Smaller File Size
+Faster Queries
+Schema Support
+```
+
+Interview Point:
+
+```text
+Parquet is preferred because Spark can read only required columns instead of scanning the entire dataset.
+```
+
+---
+
+## Quick Revision - Section 9
+
+```text
+IntegerType
+LongType
+FloatType
+DoubleType
+StringType
+DateType
+TimestampType
+
+header=True -> First row is column names
+inferSchema=True -> Detect data types automatically
+
+StructType + StructField -> Explicit Schema
+
+fillna() -> Replace NULL values
+coalesce() -> First non-null value
+
+CAST -> Error on invalid conversion
+TRY_CAST -> NULL on invalid conversion
+
+read.csv()
+read.json()
+read.parquet()
+read.table()
+
+write.csv()
+write.json()
+write.parquet()
+saveAsTable()
+
+CSV -> Row Based
+Parquet -> Columnar Storage
 ```

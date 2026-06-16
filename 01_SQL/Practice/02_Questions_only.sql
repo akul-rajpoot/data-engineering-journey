@@ -316,3 +316,7 @@ Salary Budget: For each manager, calculate the total salary budget they control
 
 #Q47: Compare each employee's salary with the average salary of the corresponding department.
 #Output the department, first name, and salary of employees along with the average salary of that department.
+
+
+#Q48:Write a query that will calculate the number of shipments per month. The unique key for one shipment 
+#is a combination of shipment_id and sub_id. Output the year_month in format YYYY-MM and the number of shipments in that month.

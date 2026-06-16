@@ -929,6 +929,12 @@ limit 1;
 #Output the department, first name, and salary of employees along with the average salary of that department.
 
 select department,first_name,salary,
-avg(salary) over(partition by department) as avg_salary from employee
+avg(salary) over(partition by department) as avg_salary from employee;
 
 
+#Q48:Write a query that will calculate the number of shipments per month. The unique key for one shipment 
+#is a combination of shipment_id and sub_id. Output the year_month in format YYYY-MM and the number of shipments in that month.
+
+SELECT DATE_FORMAT(shipment_date, '%Y-%m') as shipment_date ,count(shipment_id)
+from amazon_shipment
+group by DATE_FORMAT(shipment_date, '%yyyy-%m');

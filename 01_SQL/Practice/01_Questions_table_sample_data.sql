@@ -1696,3 +1696,83 @@ INSERT INTO lyft_rides46 VALUES
 
 #Q47: Compare each employee's salary with the average salary of the corresponding department.
 #Output the department, first name, and salary of employees along with the average salary of that department.
+CREATE TABLE employee47 (
+    id BIGINT PRIMARY KEY,
+    first_name TEXT,
+    last_name TEXT,
+    age BIGINT,
+    sex TEXT,
+    email TEXT,
+    city TEXT,
+    address TEXT,
+    department TEXT,
+    employee_title TEXT,
+    manager_id BIGINT,
+    salary BIGINT,
+    bonus BIGINT,
+    target BIGINT
+);
+INSERT INTO employee47 VALUES
+(1,'John','Smith',45,'M','john@company.com','New York','123 Main St',
+ 'Engineering','Director',NULL,150000,30000,100),
+
+(2,'Alice','Johnson',38,'F','alice@company.com','Chicago','45 Oak Ave',
+ 'Engineering','Manager',1,120000,20000,90),
+
+(3,'Bob','Williams',34,'M','bob@company.com','Chicago','67 Pine Rd',
+ 'Engineering','Senior Engineer',2,100000,15000,85),
+
+(4,'Carol','Davis',29,'F','carol@company.com','Boston','89 Maple St',
+ 'Engineering','Engineer',2,90000,10000,80),
+
+(5,'David','Brown',42,'M','david@company.com','Dallas','12 Cedar Ln',
+ 'Sales','Director',1,140000,25000,110),
+
+(6,'Eva','Miller',35,'F','eva@company.com','Dallas','34 Elm St',
+ 'Sales','Manager',5,110000,18000,100),
+
+(7,'Frank','Wilson',30,'M','frank@company.com','Houston','56 Birch Rd',
+ 'Sales','Sales Executive',6,80000,12000,95),
+
+(8,'Grace','Moore',28,'F','grace@company.com','Houston','78 Walnut Dr',
+ 'Sales','Sales Executive',6,75000,10000,90),
+
+(9,'Henry','Taylor',40,'M','henry@company.com','Seattle','90 Spruce Ave',
+ 'HR','HR Manager',1,95000,12000,85),
+
+(10,'Ivy','Anderson',27,'F','ivy@company.com','Seattle','22 Aspen Rd',
+ 'HR','HR Specialist',9,65000,7000,75);
+ 
+ #Q48:Write a query that will calculate the number of shipments per month. The unique key for one shipment 
+#is a combination of shipment_id and sub_id. Output the year_month in format YYYY-MM and the number of shipments in that month.
+ 
+ CREATE TABLE amazon_shipment48 (
+    shipment_id BIGINT,
+    sub_id BIGINT,
+    shipment_date DATE,
+    weight BIGINT
+);
+
+INSERT INTO amazon_shipment48 VALUES
+(1001, 1, '2024-01-05', 15),
+(1001, 2, '2024-01-05', 10),
+
+(1002, 1, '2024-01-12', 20),
+
+(1003, 1, '2024-01-20', 12),
+(1003, 2, '2024-01-20', 8),
+
+(1004, 1, '2024-02-03', 25),
+
+(1005, 1, '2024-02-10', 18),
+(1005, 2, '2024-02-10', 6),
+
+(1006, 1, '2024-02-18', 30),
+
+(1007, 1, '2024-03-05', 22),
+(1007, 2, '2024-03-05', 5),
+(1007, 3, '2024-03-05', 7),
+
+(1008, 1, '2024-03-12', 16),
+
+(1009, 1, '2024-03-20', 28);
