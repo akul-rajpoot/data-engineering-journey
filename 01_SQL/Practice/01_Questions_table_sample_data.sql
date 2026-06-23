@@ -1776,3 +1776,61 @@ INSERT INTO amazon_shipment48 VALUES
 (1008, 1, '2024-03-12', 16),
 
 (1009, 1, '2024-03-20', 28);
+
+/*49:Find the best-selling item for each month (no need to separate months by year). The best-selling 
+item is determined by the highest total sales amount, calculated as: total_paid = unitprice * quantity.
+ A negative quantity indicates a return or cancellation (the invoice number begins with 'C'. 
+ To calculate sales, ignore returns and cancellations. Output the month, description of the item, and the 
+ total amount paid.*/
+ CREATE TABLE online_retail49 (
+    invoiceno TEXT,
+    stockcode TEXT,
+    description TEXT,
+    quantity BIGINT,
+    invoicedate DATE,
+    unitprice DOUBLE,
+    customerid DOUBLE,
+    country TEXT
+);
+INSERT INTO online_retail49 VALUES
+('10001','S001','WHITE MUG',10,'2024-01-05',5.00,101,'UK'),
+('10002','S002','RED PLATE',5,'2024-01-10',12.00,102,'UK'),
+('10003','S001','WHITE MUG',8,'2024-01-15',5.00,103,'UK'),
+('C10004','S001','WHITE MUG',-2,'2024-01-20',5.00,101,'UK'),
+
+('10005','S003','BLUE BOWL',15,'2024-02-02',4.00,104,'France'),
+('10006','S002','RED PLATE',10,'2024-02-10',12.00,105,'France'),
+('10007','S003','BLUE BOWL',20,'2024-02-15',4.00,106,'Germany'),
+('C10008','S003','BLUE BOWL',-5,'2024-02-18',4.00,104,'France'),
+
+('10009','S004','GREEN CUP',12,'2024-03-05',8.00,107,'UK'),
+('10010','S001','WHITE MUG',10,'2024-03-08',5.00,108,'UK'),
+('10011','S004','GREEN CUP',8,'2024-03-15',8.00,109,'Germany'),
+
+('10012','S002','RED PLATE',20,'2024-04-02',12.00,110,'UK'),
+('10013','S003','BLUE BOWL',10,'2024-04-05',4.00,111,'France'),
+
+('10014','S005','BLACK VASE',6,'2024-05-01',25.00,112,'UK'),
+('10015','S002','RED PLATE',8,'2024-05-10',12.00,113,'Germany'),
+
+('10016','S006','WOODEN FRAME',10,'2024-06-03',15.00,114,'UK'),
+('10017','S005','BLACK VASE',5,'2024-06-15',25.00,115,'France'),
+
+('10018','S001','WHITE MUG',30,'2024-07-01',5.00,116,'UK'),
+('10019','S004','GREEN CUP',10,'2024-07-10',8.00,117,'Germany'),
+
+('10020','S002','RED PLATE',12,'2024-08-05',12.00,118,'France'),
+('10021','S005','BLACK VASE',4,'2024-08-15',25.00,119,'UK'),
+
+('10022','S006','WOODEN FRAME',15,'2024-09-03',15.00,120,'UK'),
+('10023','S001','WHITE MUG',10,'2024-09-12',5.00,121,'Germany'),
+
+('10024','S004','GREEN CUP',20,'2024-10-01',8.00,122,'UK'),
+('10025','S002','RED PLATE',10,'2024-10-20',12.00,123,'France'),
+
+('10026','S005','BLACK VASE',8,'2024-11-05',25.00,124,'UK'),
+('10027','S006','WOODEN FRAME',10,'2024-11-12',15.00,125,'Germany'),
+
+('10028','S002','RED PLATE',25,'2024-12-01',12.00,126,'UK'),
+('10029','S005','BLACK VASE',5,'2024-12-15',25.00,127,'France'),
+('C10030','S002','RED PLATE',-3,'2024-12-20',12.00,126,'UK');

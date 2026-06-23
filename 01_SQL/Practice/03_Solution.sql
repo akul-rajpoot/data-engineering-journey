@@ -938,3 +938,22 @@ avg(salary) over(partition by department) as avg_salary from employee;
 SELECT DATE_FORMAT(shipment_date, '%Y-%m') as shipment_date ,count(shipment_id)
 from amazon_shipment
 group by DATE_FORMAT(shipment_date, '%yyyy-%m');
+
+
+/*49:Find the best-selling item for each month (no need to separate months by year). The best-selling 
+item is determined by the highest total sales amount, calculated as: total_paid = unitprice * quantity.
+A negative quantity indicates a return or cancellation (the invoice number begins with 'C'. 
+To calculate sales, ignore returns and cancellations. Output the month, description of the item, and the 
+total amount paid.*/
+
+with amount as (select month(invoicedate) as month ,description,sum(unitprice*quantity) as total_paid 
+from online_retail49
+where quantity>0
+group by month(invoicedate),description
+)
+select month,description,total_paid from (select *,
+row_number() over(partition by month order by total_paid desc ) as rn
+from amount)s where s.rn=1
+order by month;
+
+

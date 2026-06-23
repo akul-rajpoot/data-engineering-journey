@@ -1311,6 +1311,7 @@ Parquet is preferred because Spark can read only required columns instead of sca
 
 ---
 
+
 ## Quick Revision - Section 9
 
 ```text
@@ -1345,4 +1346,663 @@ saveAsTable()
 
 CSV -> Row Based
 Parquet -> Columnar Storage
+```
+
+
+## Section 10 - Spark Architecture
+
+### Why Spark Architecture?
+
+Understanding Spark Architecture helps explain what happens internally when actions such as:
+
+```python
+df.show()
+df.count()
+```
+
+Key Components:
+
+```text
+Driver
+Executor
+Cluster Manager
+Job
+Stage
+Task
+```
+
+---
+
+### Driver
+
+The Driver is the brain of a Spark application.
+
+Responsibilities:
+
+```text
+Creates SparkSession
+Builds Execution Plan
+Creates Jobs
+Creates Stages
+Creates Tasks
+Coordinates Executors
+Returns Results
+```
+
+Example:
+
+```python
+spark = SparkSession.builder \
+    .appName("Employee") \
+    .getOrCreate()
+```
+
+Think:
+
+```text
+Driver = Project Manager
+```
+
+---
+
+### Executor
+
+Executors perform the actual work.
+
+Responsibilities:
+
+```text
+Execute Tasks
+Process Data
+Store Cached Data
+Return Results
+```
+
+Example:
+
+```text
+Driver
+  |
+  |-- Executor 1
+  |-- Executor 2
+  |-- Executor 3
+```
+
+Think:
+
+```text
+Executors = Workers
+```
+
+---
+
+### Cluster Manager
+
+Responsible for resource allocation.
+
+Examples:
+
+```text
+YARN
+Kubernetes
+Mesos
+Standalone Cluster
+```
+
+Responsibilities:
+
+```text
+Allocate CPU
+Allocate Memory
+Start Executors
+Manage Cluster Resources
+```
+
+Think:
+
+```text
+Cluster Manager = HR Department
+```
+
+---
+
+### Job
+
+A Job is created whenever an Action is executed.
+
+Examples:
+
+```python
+df.show()
+df.count()
+df.collect()
+df.first()
+```
+
+Rule:
+
+```text
+1 Action = 1 Job
+```
+
+Transformations alone do not create jobs.
+
+Example:
+
+```python
+df.filter(col("salary") > 50000)
+```
+
+Result:
+
+```text
+No Job Created
+```
+
+---
+
+### Stage
+
+A Job is divided into one or more Stages.
+
+Wide transformations create new stages because they require a shuffle.
+
+Example:
+
+```python
+df.filter(col("salary") > 50000) \
+  .groupBy("department") \
+  .count() \
+  .show()
+```
+
+Execution:
+
+```text
+Stage 1 -> filter()
+Shuffle
+Stage 2 -> groupBy() + count()
+```
+
+---
+
+### Task
+
+A Stage is divided into Tasks.
+
+Rule:
+
+```text
+1 Partition = 1 Task
+```
+
+Example:
+
+```text
+8 Partitions = 8 Tasks
+```
+
+---
+
+### Narrow Transformations
+
+Definition:
+
+```text
+Child partition depends on only one parent partition.
+No data movement.
+No shuffle.
+```
+
+Examples:
+
+```python
+select()
+filter()
+withColumn()
+drop()
+```
+
+---
+
+### Wide Transformations
+
+Definition:
+
+```text
+Child partition depends on multiple parent partitions.
+Data movement occurs.
+Shuffle occurs.
+```
+
+Examples:
+
+```python
+groupBy()
+join()
+distinct()
+repartition()
+orderBy()
+```
+
+---
+
+### Shuffle
+
+Definition:
+
+```text
+Movement of data across partitions/executors.
+```
+
+Common Operations Causing Shuffle:
+
+```text
+groupBy()
+join()
+distinct()
+repartition()
+orderBy()
+```
+
+Why Expensive?
+
+```text
+Network Transfer
+Disk I/O
+Sorting
+Data Redistribution
+```
+
+---
+
+### Important Relationships
+
+```text
+Action
+  ↓
+Job
+  ↓
+Stage
+  ↓
+Task
+```
+
+```text
+Wide Transformation
+       ↓
+    Shuffle
+       ↓
+   New Stage
+```
+
+---
+
+## Section 11 - Spark Performance Optimization
+
+### Why Performance Optimization?
+
+On small datasets Spark performs well automatically.
+
+On large datasets:
+
+```text
+Bad Partitioning
+Too Many Shuffles
+Poor Join Strategy
+```
+
+can make jobs run for hours.
+
+---
+
+### repartition()
+
+Used to:
+
+```text
+Increase Partitions
+Decrease Partitions
+Redistribute Data Evenly
+```
+
+Example:
+
+```python
+df.repartition(10)
+```
+
+Important:
+
+```text
+Causes Shuffle
+Expensive Operation
+```
+
+Use when:
+
+```text
+Data is Skewed
+Need More Parallelism
+Need Balanced Partitions
+```
+
+---
+
+### coalesce()
+
+Usually used to reduce partitions.
+
+Example:
+
+```python
+df.coalesce(2)
+```
+
+Advantages:
+
+```text
+More Efficient Than repartition()
+Usually Avoids Full Shuffle
+```
+
+Interview Question:
+
+Current:
+
+```text
+100 Partitions
+```
+
+Need:
+
+```text
+5 Partitions
+```
+
+Preferred:
+
+```python
+df.coalesce(5)
+```
+
+Reason:
+
+```text
+Less Expensive
+Usually Avoids Shuffle
+```
+
+---
+
+### cache()
+
+Stores DataFrame in memory.
+
+Example:
+
+```python
+df.cache()
+```
+
+Use when:
+
+```text
+Same DataFrame Used Multiple Times
+```
+
+Important:
+
+```text
+cache() is Lazy
+Nothing Is Cached Immediately
+```
+
+Example:
+
+```python
+df.cache()
+df.count()
+```
+
+Execution:
+
+```text
+df.cache()  -> Marks For Caching
+count()     -> Computes And Stores In Cache
+```
+
+---
+
+### persist()
+
+More flexible than cache().
+
+Example:
+
+```python
+from pyspark import StorageLevel
+
+df.persist(StorageLevel.MEMORY_AND_DISK)
+```
+
+Common Options:
+
+```text
+MEMORY_ONLY
+MEMORY_AND_DISK
+DISK_ONLY
+```
+
+Interview Point:
+
+```text
+cache() = MEMORY_ONLY Shortcut
+persist() = More Control
+```
+
+---
+
+### Broadcast Join
+
+One of the most important PySpark interview topics.
+
+Problem:
+
+```text
+Large Table + Small Lookup Table
+```
+
+Example:
+
+```text
+Sales Table      = 1 Billion Rows
+Product Table    = 500 Rows
+```
+
+Solution:
+
+```python
+from pyspark.sql.functions import broadcast
+
+sales_df.join(
+    broadcast(product_df),
+    "product_id"
+)
+```
+
+What Happens?
+
+```text
+Small Table Copied To Every Executor
+Join Happens Locally
+Large Shuffle Avoided
+```
+
+Benefits:
+
+```text
+Faster Joins
+Less Network Traffic
+Better Performance
+```
+
+Common Examples:
+
+```text
+Employee + Department
+Sales + Product Master
+Transactions + Country Lookup
+```
+
+---
+
+### Common Shuffle Operations
+
+Always remember these:
+
+```text
+groupBy()
+join()
+distinct()
+repartition()
+orderBy()
+```
+
+Reason:
+
+```text
+Cause Data Movement Across Partitions
+```
+
+---
+
+### Important Interview Questions
+
+#### Difference Between repartition() and coalesce()
+
+```text
+repartition()
+- Increase Or Decrease Partitions
+- Causes Shuffle
+
+coalesce()
+- Usually Reduce Partitions
+- More Efficient
+- Usually Avoids Full Shuffle
+```
+
+---
+
+#### Difference Between cache() and persist()
+
+```text
+cache()
+- MEMORY_ONLY
+- Simpler
+
+persist()
+- Multiple Storage Options
+- More Flexible
+```
+
+---
+
+#### What Loads Data Into Cache?
+
+Code:
+
+```python
+df.cache()
+df.show()
+df.count()
+```
+
+Answer:
+
+```text
+First Action Triggers Computation
+And Populates Cache
+```
+
+---
+
+## Quick Revision - Section 11
+
+```text
+repartition()
+- Increase Or Decrease Partitions
+- Causes Shuffle
+
+coalesce()
+- Usually Reduce Partitions
+- More Efficient Than repartition()
+
+cache()
+- Stores DataFrame In Memory
+- Lazy Evaluation
+
+persist()
+- More Control Than cache()
+- MEMORY_ONLY
+- MEMORY_AND_DISK
+- DISK_ONLY
+
+Broadcast Join
+- Small Table + Large Table
+- Avoids Shuffle
+- Faster Join
+
+Common Shuffle Operations
+- groupBy()
+- join()
+- distinct()
+- repartition()
+- orderBy()
+
+1 Partition = 1 Task
+
+cache() Is Lazy
+First Action Populates Cache
+```
+
+---
+
+## Quick Revision - Section 10
+
+```text
+Driver = Brain of Spark Application
+
+Executor = Executes Tasks
+
+Cluster Manager = Allocates Resources
+
+Action -> Creates Job
+
+1 Action = 1 Job
+
+Job -> Divided into Stages
+
+Stage -> Divided into Tasks
+
+1 Partition = 1 Task
+
+Narrow Transformations:
+select()
+filter()
+withColumn()
+drop()
+
+Wide Transformations:
+groupBy()
+join()
+distinct()
+repartition()
+orderBy()
+
+Wide Transformation
+       ↓
+    Shuffle
+       ↓
+   New Stage
 ```

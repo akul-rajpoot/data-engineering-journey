@@ -320,3 +320,10 @@ Salary Budget: For each manager, calculate the total salary budget they control
 
 #Q48:Write a query that will calculate the number of shipments per month. The unique key for one shipment 
 #is a combination of shipment_id and sub_id. Output the year_month in format YYYY-MM and the number of shipments in that month.
+
+/*49:Find the best-selling item for each month (no need to separate months by year). The best-selling 
+item is determined by the highest total sales amount, calculated as: total_paid = unitprice * quantity.
+ A negative quantity indicates a return or cancellation (the invoice number begins with 'C'. 
+ To calculate sales, ignore returns and cancellations. Output the month, description of the item, and the 
+ total amount paid.*/
+ 
